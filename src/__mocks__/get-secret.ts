@@ -1,3 +1,5 @@
+/* eslint-disable import/no-restricted-paths */
+
 import awsSecretsManagerResponse from '../../test/fixtures/secrets/aws-secrets-manager-response.json';
 
 function getSecret(_: string, __: string): object {

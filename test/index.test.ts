@@ -11,7 +11,7 @@ test('loading TypeScript config works', (): void => {
     KEY_5: 4.2,
     KEY_7: 'local key',
     KEY_8: 1,
-    KEY_9: 'bar'
+    KEY_9: 'bar',
   });
 });
 
@@ -26,7 +26,7 @@ test('loading JavaScript config works', (): void => {
     KEY_5: 4.2,
     KEY_7: 'local key',
     KEY_8: 1,
-    KEY_9: 'bar'
+    KEY_9: 'bar',
   });
 });
 
@@ -44,7 +44,8 @@ test('loading development environment config works', (): void => {
     KEY_6: 'development environment key',
     KEY_7: 'local key',
     KEY_8: 2,
-    KEY_9: 'bar'
+    KEY_9: 'bar',
+    KEY_10: 'development local key'
   });
 
   process.env.NODE_ENV = 'test';

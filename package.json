@@ -1,6 +1,6 @@
 {
   "name": "config-dug",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Config loader with support for AWS Secrets Manager",
   "author": "Neo Financial Engineering <engineering@neofinancial.com>",
   "main": "build/index.js",
@@ -22,7 +22,7 @@
     "lint": "eslint \"**/*.{ts,js}\"",
     "format": "prettier --write \"**/*.{ts,js,json,graphql,md}\"",
     "format:check": "prettier --debug-check \"**/*.{ts,js,json,graphql,md}\"",
-    "prepare": "rimraf build && tsc -p tsconfig.build.json"
+    "prepublishOnly": "rimraf build && tsc -p tsconfig.build.json"
   },
   "files": [
     "/build/**/*.js",
@@ -37,24 +37,24 @@
   ],
   "dependencies": {
     "aws-param-store": "^2.1.0",
-    "aws-sdk": "^2.437.0",
+    "aws-sdk": "^2.475.0",
     "debug": "^4.1.1",
     "lodash": "^4.17.11"
   },
   "devDependencies": {
     "@types/aws-param-store": "^2.1.0",
-    "@types/debug": "^4.1.3",
-    "@types/jest": "^24.0.11",
-    "@types/lodash": "^4.14.123",
-    "@types/node": "^11.13.2",
+    "@types/debug": "^4.1.4",
+    "@types/jest": "^24.0.14",
+    "@types/lodash": "^4.14.134",
+    "@types/node": "^12.0.8",
     "eslint": "^5.16.0",
-    "eslint-config-neo": "^0.1.0",
+    "eslint-config-neo": "^0.3.0",
     "husky": "^1.3.1",
-    "jest": "^24.7.1",
-    "lint-staged": "^8.1.5",
-    "prettier": "^1.16.4",
+    "jest": "^24.8.0",
+    "lint-staged": "^8.2.1",
+    "prettier": "^1.18.2",
     "rimraf": "^2.6.3",
     "ts-jest": "^24.0.2",
-    "typescript": "^3.4.3"
+    "typescript": "~3.4.5"
   }
 }

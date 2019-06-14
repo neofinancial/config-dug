@@ -97,8 +97,17 @@ function loadConfig(configPath = ''): ConfigObject {
   const environmentConfig = loadFile(
     resolveFile(appDirectory, configPath, `config.${environment}`)
   );
+  const localEnvironmentConfig = loadFile(
+    resolveFile(appDirectory, configPath, `config.${environment}.local`)
+  );
   const localConfig = loadFile(resolveFile(appDirectory, configPath, 'config.local'));
-  const fileConfig = Object.assign({}, defaultConfig, environmentConfig, localConfig);
+  const fileConfig = Object.assign(
+    {},
+    defaultConfig,
+    environmentConfig,
+    localEnvironmentConfig,
+    localConfig
+  );
   const config = Object.assign({}, fileConfig, loadSecrets(fileConfig), loadEnvironment());
 
   return config;

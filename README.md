@@ -36,6 +36,7 @@ Settings from these different sources are merged together into a single config o
 
 1. `config.default.{ts|js}`
 1. `config.${NODE_ENV}.{ts|js}`
+1. `config.${NODE_ENV}.local.{ts|js}`
 1. `config.local.{ts|js}`
 1. AWS Secrets Manager
 1. Environment variables
