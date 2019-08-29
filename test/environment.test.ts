@@ -1,7 +1,10 @@
 import { loadConfig } from '../src';
 
 test('loading config from environment variable works', (): void => {
+  process.env.KEY_1 = 'value 1';
   process.env.KEY_3 = 'true';
+  process.env.KEY_4 = '42';
+  process.env.KEY_5 = '4.2';
 
   const testConfig = loadConfig('test/fixtures/typescript');
 

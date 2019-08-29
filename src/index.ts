@@ -3,7 +3,6 @@
 import fs from 'fs';
 import path from 'path';
 import createDebug from 'debug';
-import mapValues from 'lodash/mapValues';
 
 import getSecret from './get-secret';
 
@@ -13,7 +12,7 @@ interface ConfigObject {
   [key: string]: string | boolean | number;
 }
 
-function resolveFile(appDirectory: string, configPath: string, fileName: string): string {
+const resolveFile = (appDirectory: string, configPath: string, fileName: string): string => {
   if (fs.existsSync(path.resolve(appDirectory, configPath, `${fileName}.ts`))) {
     debug(
       'resolved config file',
@@ -35,9 +34,9 @@ function resolveFile(appDirectory: string, configPath: string, fileName: string)
 
     return undefined;
   }
-}
+};
 
-function loadFile(filePath: string): object {
+const loadFile = (filePath: string): object => {
   if (filePath) {
     debug('loading config file', filePath);
 
@@ -51,43 +50,52 @@ function loadFile(filePath: string): object {
       console.error(error);
     }
   }
-}
+};
 
-function loadSecrets(config: {
+const convertString = (value: string): string | number | boolean => {
+  if (value.toLowerCase() === 'true') return true;
+  if (value.toLowerCase() === 'false') return false;
+  if (value.match(/^\d+.\d+$/)) return parseFloat(value);
+  if (value.match(/^\d+$/)) return parseInt(value, 10);
+
+  return value;
+};
+
+const loadSecrets = (config: {
   AWS_SECRETS_MANAGER_NAME?: string;
   AWS_SECRETS_MANAGER_REGION?: string;
   awsSecretsManagerName?: string;
   awsSecretsManagerRegion?: string;
-}): object {
+}): object => {
   const secretName = config.AWS_SECRETS_MANAGER_NAME || config.awsSecretsManagerName;
   const region = config.AWS_SECRETS_MANAGER_REGION || config.awsSecretsManagerRegion || 'us-east-1';
 
   if (secretName) {
     debug('loading config from AWS Secrets Manager', secretName, region);
 
-    return getSecret(secretName, region);
+    const secret = getSecret(secretName, region);
+
+    return Object.entries(secret).reduce((result: ConfigObject, [key, value]): ConfigObject => {
+      result[key] = convertString(value);
+
+      return result;
+    }, {});
   } else {
     return {};
   }
-}
+};
 
-function loadEnvironment(): object {
+const loadEnvironment = (): object => {
   debug('loading config from environment variables');
 
-  return mapValues(
-    process.env,
-    (value: string): string | number | boolean => {
-      if (value.toLowerCase() === 'true') return true;
-      if (value.toLowerCase() === 'false') return false;
-      if (value.match(/^\d+.\d$/)) return parseFloat(value);
-      if (value.match(/^\d$/)) return parseInt(value, 10);
+  return Object.entries(process.env).reduce((result: ConfigObject, [key, value]): ConfigObject => {
+    result[key] = convertString(value);
 
-      return value;
-    }
-  );
-}
+    return result;
+  }, {});
+};
 
-function loadConfig(configPath = ''): ConfigObject {
+const loadConfig = (configPath = ''): ConfigObject => {
   const appDirectory = fs.realpathSync(process.cwd());
   const environment = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
 
@@ -111,14 +119,14 @@ function loadConfig(configPath = ''): ConfigObject {
   const config = Object.assign({}, fileConfig, loadSecrets(fileConfig), loadEnvironment());
 
   return config;
-}
+};
 
-function init(): ConfigObject {
+const init = (): ConfigObject => {
   debug('loading default config');
   const config = loadConfig();
 
   return config;
-}
+};
 
 export default init();
 export { loadConfig };

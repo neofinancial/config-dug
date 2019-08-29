@@ -2,7 +2,7 @@
 
 import awsParamStore from 'aws-param-store';
 
-function getSecret(secretName: string, region: string): object {
+const getSecret = (secretName: string, region: string): object => {
   try {
     const secret = awsParamStore.getParameterSync(`/aws/reference/secretsmanager/${secretName}`, {
       region
