@@ -1,5 +1,7 @@
 # Config Dug
 
+[![Build status](https://github.com/neofinancial/config-dug/workflows/CI/badge.svg)](https://github.com/neofinancial/config-dug/actions)
+
 ![Config Dug](https://github.com/neofinancial/config-dug/blob/master/config-dug.png "Config Dug")
 
 Config loader with support for AWS Secrets Manager.
