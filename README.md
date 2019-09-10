@@ -1,20 +1,19 @@
 # Config Dug
 
 [![Build status](https://github.com/neofinancial/config-dug/workflows/CI/badge.svg)](https://github.com/neofinancial/config-dug/actions)
+![TypeScript 3.4.3](https://img.shields.io/badge/TypeScript-3.4.3-brightgreen.svg)
 
-![Config Dug](https://github.com/neofinancial/config-dug/blob/master/config-dug.png "Config Dug")
+![Config Dug](https://github.com/neofinancial/config-dug/blob/master/config-dug.png)
 
 Config loader with support for AWS Secrets Manager.
-
-![TypeScript 3.4.3](https://img.shields.io/badge/TypeScript-3.4.3-brightgreen.svg)
 
 ## Usage
 
 ### Installation
 
-| yarn                | npm                    |
-|---------------------|------------------------|
-|`yarn add config-dug`|`npm install config-dug`|
+| yarn                  | npm                      |
+| --------------------- | ------------------------ |
+| `yarn add config-dug` | `npm install config-dug` |
 
 ### Create your config files
 
@@ -74,7 +73,7 @@ In order to use AWS Secrets Manager you have to add a `AWS_SECRETS_MANAGER_NAME`
 export default {
   AWS_SECRETS_MANAGER_NAME: 'production/myapp/config',
   API_ENDPOINT: 'https://api.kanye.rest/'
-}
+};
 ```
 
 In addition to specifying the secret name you can also provide a region using the `AWS_SECRETS_MANAGER_REGION` or `awsSecretsManagerRegion` setting:
@@ -85,7 +84,7 @@ export default {
   AWS_SECRETS_MANAGER_NAME: 'production/myapp/config',
   AWS_SECRETS_MANAGER_REGION: 'us-west-2',
   API_ENDPOINT: 'https://api.somecompany.com'
-}
+};
 ```
 
 This package uses the [aws-sdk](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/) internally. Refer to their documentation for information about [authentication](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-credentials-node.html), configuring a default [region](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-region.html) and configuring [access control for AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access.html).
