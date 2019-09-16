@@ -76,16 +76,19 @@ export default {
 };
 ```
 
-In addition to specifying the secret name you can also provide a region using the `AWS_SECRETS_MANAGER_REGION` or `awsSecretsManagerRegion` setting:
+In addition to specifying the secret name you can also provide a region using the `AWS_SECRETS_MANAGER_REGION` or `awsSecretsManagerRegion` setting. The connection timeout in milliseconds can also be specified using the `AWS_SECRETS_MANAGER_TIMEOUT` or `awsSecretsManagerTimeout` setting:
 
 ```ts
 // config.default.ts
 export default {
   AWS_SECRETS_MANAGER_NAME: 'production/myapp/config',
   AWS_SECRETS_MANAGER_REGION: 'us-west-2',
+  AWS_SECRETS_MANAGER_TIMEOUT: 2000
   API_ENDPOINT: 'https://api.somecompany.com'
 };
 ```
+
+The default region is `us-east-1` and the default connection timeout is `5000`ms.
 
 This package uses the [aws-sdk](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/) internally. Refer to their documentation for information about [authentication](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-credentials-node.html), configuring a default [region](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-region.html) and configuring [access control for AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access.html).
 

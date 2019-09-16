@@ -1,3 +1,9 @@
+# Changelog
+
+## 1.3.0 (September 16, 2019)
+
+Add AWS Secrets Manager connection timeout
+
 ## 1.2.0 (August 29, 2019)
 
 - Convert AWS Secrets Manager string values to correct types

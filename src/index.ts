@@ -64,16 +64,19 @@ const convertString = (value: string): string | number | boolean => {
 const loadSecrets = (config: {
   AWS_SECRETS_MANAGER_NAME?: string;
   AWS_SECRETS_MANAGER_REGION?: string;
+  AWS_SECRETS_MANAGER_TIMEOUT?: number;
   awsSecretsManagerName?: string;
   awsSecretsManagerRegion?: string;
+  awsSecretsManagerTimeout?: number;
 }): object => {
   const secretName = config.AWS_SECRETS_MANAGER_NAME || config.awsSecretsManagerName;
   const region = config.AWS_SECRETS_MANAGER_REGION || config.awsSecretsManagerRegion || 'us-east-1';
+  const timeout = config.AWS_SECRETS_MANAGER_TIMEOUT || config.awsSecretsManagerTimeout || 5000;
 
   if (secretName) {
     debug('loading config from AWS Secrets Manager', secretName, region);
 
-    const secret = getSecret(secretName, region);
+    const secret = getSecret(secretName, region, timeout);
 
     return Object.entries(secret).reduce((result: ConfigObject, [key, value]): ConfigObject => {
       result[key] = convertString(value);
