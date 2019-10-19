@@ -58,11 +58,13 @@ console.log(config.API_ENDPOINT);
 
 ```js
 // app.js
-const config = require('config-dug');
+const config = require('config-dug').default;
 
 console.log(config.API_ENDPOINT);
 // https://api.kanye.rest/
 ```
+
+> :warning: You must use `require('config-dug').default` in JavaScript files. If you exclude `.default` Config Dug will not work.
 
 ### Using AWS Secrets Manager
 
