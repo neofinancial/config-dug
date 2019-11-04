@@ -5,6 +5,7 @@ test('loading config from environment variable works', (): void => {
   process.env.KEY_3 = 'true';
   process.env.KEY_4 = '42';
   process.env.KEY_5 = '4.2';
+  process.env.KEY_11 = '123456,123456';
 
   const testConfig = loadConfig('test/fixtures/typescript');
 
@@ -16,7 +17,8 @@ test('loading config from environment variable works', (): void => {
     KEY_5: 4.2,
     KEY_7: 'local key',
     KEY_8: 1,
-    KEY_9: 'bar'
+    KEY_9: 'bar',
+    KEY_11: '123456,123456'
   });
 
   delete process.env.KEY_3;

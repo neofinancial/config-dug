@@ -11,6 +11,7 @@ test('loading secrets from AWS Secrets Manager works', (): void => {
     DB_PASSWORD: 'secret',
     TEST_BOOLEAN: true,
     TEST_INTEGER: 42,
-    TEST_FLOAT: 4.2
+    TEST_FLOAT: 4.2,
+    TEST_NUMBER_LIST: '123456,123456'
   });
 });

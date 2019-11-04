@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.1 (November 4, 2019)
+
+Fix bug in float parsing regex
+
 ## 1.3.0 (September 16, 2019)
 
 Add AWS Secrets Manager connection timeout

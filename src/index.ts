@@ -55,7 +55,7 @@ const loadFile = (filePath: string): object => {
 const convertString = (value: string): string | number | boolean => {
   if (value.toLowerCase() === 'true') return true;
   if (value.toLowerCase() === 'false') return false;
-  if (value.match(/^\d+.\d+$/)) return parseFloat(value);
+  if (value.match(/^\d+\.\d+$/)) return parseFloat(value);
   if (value.match(/^\d+$/)) return parseInt(value, 10);
 
   return value;
