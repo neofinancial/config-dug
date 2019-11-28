@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/no-nested-ternary */
 /* eslint-disable no-console */
 
 import fs from 'fs';
@@ -100,7 +101,11 @@ const loadEnvironment = (): object => {
 
 const loadConfig = (configPath = ''): ConfigObject => {
   const appDirectory = fs.realpathSync(process.cwd());
-  const environment = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
+  const environment = process.env.APP_ENV
+    ? process.env.APP_ENV
+    : process.env.NODE_ENV
+    ? process.env.NODE_ENV
+    : 'development';
 
   debug('loading config from', path.resolve(appDirectory, configPath));
 
@@ -126,6 +131,7 @@ const loadConfig = (configPath = ''): ConfigObject => {
 
 const init = (): ConfigObject => {
   debug('loading default config');
+
   const config = loadConfig();
 
   return config;

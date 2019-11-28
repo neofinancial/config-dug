@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.0 (November 28, 2019)
+
+- Add support for APP_ENV
+- Update dependencies
+
 ## 1.3.1 (November 4, 2019)
 
 Fix bug in float parsing regex
