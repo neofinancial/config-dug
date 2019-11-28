@@ -30,8 +30,8 @@ test('loading JavaScript config works', (): void => {
   });
 });
 
-test('loading development environment config works', (): void => {
-  process.env.NODE_ENV = 'development';
+test('loading staging environment config with NODE_ENV works', (): void => {
+  process.env.NODE_ENV = 'staging';
 
   const devConfig = loadConfig('test/fixtures/typescript');
 
@@ -41,11 +41,32 @@ test('loading development environment config works', (): void => {
     KEY_3: false,
     KEY_4: 42,
     KEY_5: 4.2,
-    KEY_6: 'development environment key',
+    KEY_6: 'staging environment key',
     KEY_7: 'local key',
-    KEY_8: 2,
+    KEY_8: 3,
     KEY_9: 'bar',
-    KEY_10: 'development local key'
+    KEY_10: 'staging local key'
+  });
+
+  process.env.NODE_ENV = 'test';
+});
+
+test('loading staging environment config with APP_ENV works', (): void => {
+  process.env.APP_ENV = 'staging';
+
+  const devConfig = loadConfig('test/fixtures/typescript');
+
+  expect(devConfig).toMatchObject({
+    KEY_1: 'value 1',
+    KEY_2: true,
+    KEY_3: false,
+    KEY_4: 42,
+    KEY_5: 4.2,
+    KEY_6: 'staging environment key',
+    KEY_7: 'local key',
+    KEY_8: 3,
+    KEY_9: 'bar',
+    KEY_10: 'staging local key'
   });
 
   process.env.NODE_ENV = 'test';

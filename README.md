@@ -1,7 +1,7 @@
 # Config Dug
 
 [![Build status](https://github.com/neofinancial/config-dug/workflows/CI/badge.svg)](https://github.com/neofinancial/config-dug/actions)
-![TypeScript 3.4.3](https://img.shields.io/badge/TypeScript-3.4.3-brightgreen.svg)
+![TypeScript 3.7.2](https://img.shields.io/badge/TypeScript-3.7.2-brightgreen.svg)
 
 ![Config Dug](https://github.com/neofinancial/config-dug/blob/master/config-dug.png)
 
@@ -33,11 +33,13 @@ module.exports = {
 };
 ```
 
+Environment specific config files are loaded based on the value of the `APP_ENV` or `NODE_ENV` environment variables. If `APP_ENV` is present it will take precedence over `NODE_ENV`.
+
 Settings from these different sources are merged together into a single config object in the following order:
 
 1. `config.default.{ts|js}`
-1. `config.${NODE_ENV}.{ts|js}`
-1. `config.${NODE_ENV}.local.{ts|js}`
+1. `config.${APP_ENV|NODE_ENV}.{ts|js}`
+1. `config.${APP_ENV|NODE_ENV}.local.{ts|js}`
 1. `config.local.{ts|js}`
 1. AWS Secrets Manager
 1. Environment variables
