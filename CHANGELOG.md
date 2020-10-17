@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.5.0 (November 28, 2019)
+## 1.5.0 (October 17, 2020)
 
 - Add support for multiple AWS Secrets Manager secrets in the same region
 
