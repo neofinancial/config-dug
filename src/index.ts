@@ -14,10 +14,10 @@ interface ConfigObject {
 }
 
 interface LoadSecretsArgs {
-  AWS_SECRETS_MANAGER_NAME?: string | string[];
+  AWS_SECRETS_MANAGER_NAME?: string;
   AWS_SECRETS_MANAGER_REGION?: string;
   AWS_SECRETS_MANAGER_TIMEOUT?: number;
-  awsSecretsManagerName?: string | string[];
+  awsSecretsManagerName?: string;
   awsSecretsManagerRegion?: string;
   awsSecretsManagerTimeout?: number;
 }
@@ -75,16 +75,8 @@ const convertString = (value: string): string | number | boolean => {
   return value;
 };
 
-const convertToArray = (value: string | string[]): string[] => {
-  if (typeof value === 'string') {
-    return [value];
-  } else if (Array.isArray(value)) {
-    return value;
-  } else {
-    console.error(`ERROR: Secret name must be a string or a list of strings: ${value}`);
-
-    return [];
-  }
+const convertToArray = (value: string): string[] => {
+  return value.split(',').map(entry => entry.trim());
 };
 
 const loadSecrets = (config: LoadSecretsArgs): object => {
