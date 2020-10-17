@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { loadConfig } from '../src';
 
 test('loading TypeScript config works', (): void => {
@@ -76,4 +77,14 @@ test('loading invalid config does nothing', (): void => {
   const invalidConfig = loadConfig('noexist');
 
   expect(typeof invalidConfig).toBe('object');
+});
+
+test('config value that is undefined causes a warning', (): void => {
+  jest.spyOn(global.console, 'warn');
+
+  loadConfig('test/fixtures/validate');
+
+  expect(console.warn).toHaveBeenCalledWith('WARNING: Found undefined config value for KEY_3');
+  expect(console.warn).toHaveBeenCalledWith('WARNING: Found undefined config value for KEY_4');
+  expect(console.warn).toHaveBeenCalledWith('WARNING: Found undefined config value for KEY_5');
 });

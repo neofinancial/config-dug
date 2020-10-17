@@ -1,9 +1,11 @@
 /* eslint-disable no-console */
 import { ConfigObject } from '.';
 
-const validate = (config: ConfigObject): ConfigObject => {
+const validateConfig = (config: ConfigObject): ConfigObject => {
   Object.keys(config).forEach(key => {
-    if (config[key] === undefined || config[key] === null) {
+    const value = config[key];
+
+    if (value === undefined || value === null || value === 'undefined' || value === '') {
       console.warn(`WARNING: Found undefined config value for ${key}`);
     }
   });
@@ -11,4 +13,4 @@ const validate = (config: ConfigObject): ConfigObject => {
   return config;
 };
 
-export default validate;
+export default validateConfig;

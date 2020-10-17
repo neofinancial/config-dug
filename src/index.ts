@@ -6,7 +6,7 @@ import path from 'path';
 import createDebug from 'debug';
 
 import getSecret from './get-secret';
-import validate from './validate';
+import validateConfig from './validate';
 
 const debug = createDebug('config-dug');
 
@@ -129,7 +129,7 @@ const loadConfig = (configPath = ''): ConfigObject => {
   );
   const config = Object.assign({}, fileConfig, loadSecrets(fileConfig), loadEnvironment());
 
-  return validate(config);
+  return validateConfig(config);
 };
 
 const init = (): ConfigObject => {
