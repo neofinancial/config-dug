@@ -4,6 +4,10 @@
 
 - Add support for multiple AWS Secrets Manager secrets in the same region
 
+## 1.4.2 (October 17, 2020)
+
+- Warn if a config is undefined, null, 'undefined' or an empty string
+
 ## 1.4.1 (October 17, 2020)
 
 - Better error logging when fetching from Secrets Manager
