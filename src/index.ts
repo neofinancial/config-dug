@@ -13,6 +13,15 @@ interface ConfigObject {
   [key: string]: string | boolean | number;
 }
 
+interface LoadSecretsArgs {
+  AWS_SECRETS_MANAGER_NAME?: string;
+  AWS_SECRETS_MANAGER_REGION?: string;
+  AWS_SECRETS_MANAGER_TIMEOUT?: number;
+  awsSecretsManagerName?: string;
+  awsSecretsManagerRegion?: string;
+  awsSecretsManagerTimeout?: number;
+}
+
 const resolveFile = (appDirectory: string, configPath: string, fileName: string): string => {
   if (fs.existsSync(path.resolve(appDirectory, configPath, `${fileName}.ts`))) {
     debug(
@@ -62,14 +71,7 @@ const convertString = (value: string): string | number | boolean => {
   return value;
 };
 
-const loadSecrets = (config: {
-  AWS_SECRETS_MANAGER_NAME?: string;
-  AWS_SECRETS_MANAGER_REGION?: string;
-  AWS_SECRETS_MANAGER_TIMEOUT?: number;
-  awsSecretsManagerName?: string;
-  awsSecretsManagerRegion?: string;
-  awsSecretsManagerTimeout?: number;
-}): object => {
+const loadSecrets = (config: LoadSecretsArgs): object => {
   const secretName = config.AWS_SECRETS_MANAGER_NAME || config.awsSecretsManagerName;
   const region = config.AWS_SECRETS_MANAGER_REGION || config.awsSecretsManagerRegion || 'us-east-1';
   const timeout = config.AWS_SECRETS_MANAGER_TIMEOUT || config.awsSecretsManagerTimeout || 5000;
