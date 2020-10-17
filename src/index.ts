@@ -75,6 +75,18 @@ const convertString = (value: string): string | number | boolean => {
   return value;
 };
 
+const convertToArray = (value: string | string[]): string[] => {
+  if (typeof value === 'string') {
+    return [value];
+  } else if (Array.isArray(value)) {
+    return value;
+  } else {
+    console.error(`ERROR: Secret name must be a string or a list of strings: ${value}`);
+
+    return [];
+  }
+};
+
 const loadSecrets = (config: LoadSecretsArgs): object => {
   const secretName = config.AWS_SECRETS_MANAGER_NAME || config.awsSecretsManagerName;
   const region = config.AWS_SECRETS_MANAGER_REGION || config.awsSecretsManagerRegion || 'us-east-1';
