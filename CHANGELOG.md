@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.1 (October 17, 2020)
+
+- Better error logging when fetching from Secrets Manager
+- Updated `httpOptions` to use `timeout` instead of `connectTimeout`
+
 ## 1.4.0 (November 28, 2019)
 
 - Add support for APP_ENV
