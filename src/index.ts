@@ -76,7 +76,10 @@ const convertString = (value: string): string | number | boolean => {
 };
 
 const convertToArray = (value: string): string[] => {
-  return value.split(',').map(entry => entry.trim());
+  return value
+    .split(',')
+    .map(entry => entry.trim())
+    .filter(entry => !!entry);
 };
 
 const loadSecrets = (config: LoadSecretsArgs): object => {
