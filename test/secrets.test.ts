@@ -16,7 +16,7 @@ test('loading secrets from AWS Secrets Manager works', (): void => {
   });
 });
 
-test('loading secrets from multiple AWS Secrets Manager buckets works', (): void => {
+test('loading multiple AWS Secrets Manager secrets works', (): void => {
   const testConfig = loadConfig('test/fixtures/multiple-secrets');
 
   expect(testConfig).toMatchObject({

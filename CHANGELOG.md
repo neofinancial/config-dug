@@ -2,7 +2,7 @@
 
 ## 1.5.0 (November 28, 2019)
 
-- Add support for multiple AWS Secret buckets in the same region
+- Add support for multiple AWS Secrets Manager secrets in the same region
 
 ## 1.4.1 (October 17, 2020)
 

@@ -2,8 +2,8 @@
 
 import awsSecretsManagerResponse from '../../test/fixtures/secrets/aws-secrets-manager-response.json';
 
-import multipleAwsSecretsManagerResponse1 from '../../test/fixtures/multiple-secrets/aws-secrets-manager-bucket-1-response.json';
-import multipleAwsSecretsManagerResponse2 from '../../test/fixtures/multiple-secrets/aws-secrets-manager-bucket-2-response.json';
+import multipleAwsSecretsManagerResponse1 from '../../test/fixtures/multiple-secrets/aws-secrets-manager-1-response.json';
+import multipleAwsSecretsManagerResponse2 from '../../test/fixtures/multiple-secrets/aws-secrets-manager-2-response.json';
 
 const getSecret = (secretName: string, __: string): object => {
   if (secretName === 'development/config-dug') {
