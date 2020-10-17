@@ -2,7 +2,7 @@
 
 ## 1.4.1 (October 17, 2020)
 
-- Better error logging when fetching AWS Secrets.
+- Better error logging when fetching from Secrets Manager
 - Updated httpOptions to use timeout instead of connectTimeout.
 - Use args interface for loadSecrets function.
 
