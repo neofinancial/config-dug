@@ -71,7 +71,7 @@ console.log(config.API_ENDPOINT);
 
 ### Using AWS Secrets Manager
 
-In order to use AWS Secrets Manager you have to add a `AWS_SECRETS_MANAGER_NAME` or `awsSecretsManagerName` setting to your config that specifies the name of the secret to look up:
+In order to use AWS Secrets Manager you have to add a `AWS_SECRETS_MANAGER_NAME` or `awsSecretsManagerName` setting to your config that specifies the names of the secrets to look up:
 
 ```ts
 // config.default.ts
@@ -81,9 +81,20 @@ export default {
 };
 ```
 
+`AWS_SECRETS_MANAGER_NAME` can also be a comma separated list to allow connection to multiple secrets in AWS Secrets Manager. Each secret from the list is evaluated in order mean that if a specific key appears in two secrets the value will be overwritten by the last secret in the list.
+
+```ts
+// config.default.ts
+export default {
+  AWS_SECRETS_MANAGER_NAME: 'production/myapp/config, production/myapp/another-config',
+  API_ENDPOINT: 'https://api.kanye.rest/'
+};
+```
+
 In addition to specifying the secret name you can also provide a region using the `AWS_SECRETS_MANAGER_REGION` or `awsSecretsManagerRegion` setting. The connection timeout in milliseconds can also be specified using the `AWS_SECRETS_MANAGER_TIMEOUT` or `awsSecretsManagerTimeout` setting:
 
 ```ts
+
 // config.default.ts
 export default {
   AWS_SECRETS_MANAGER_NAME: 'production/myapp/config',

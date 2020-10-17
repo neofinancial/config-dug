@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.0 (October 17, 2020)
+
+- Add support for multiple AWS Secrets Manager secrets in the same region
+
 ## 1.4.2 (October 17, 2020)
 
 - Warn if a config is undefined, null, 'undefined' or an empty string
