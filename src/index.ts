@@ -6,10 +6,11 @@ import path from 'path';
 import createDebug from 'debug';
 
 import getSecret from './get-secret';
+import validateConfig from './validate-config';
 
 const debug = createDebug('config-dug');
 
-interface ConfigObject {
+export interface ConfigObject {
   [key: string]: string | boolean | number;
 }
 
@@ -128,7 +129,7 @@ const loadConfig = (configPath = ''): ConfigObject => {
   );
   const config = Object.assign({}, fileConfig, loadSecrets(fileConfig), loadEnvironment());
 
-  return config;
+  return validateConfig(config);
 };
 
 const init = (): ConfigObject => {
