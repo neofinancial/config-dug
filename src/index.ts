@@ -13,6 +13,15 @@ interface ConfigObject {
   [key: string]: string | boolean | number;
 }
 
+interface LoadSecretsArgs {
+  AWS_SECRETS_MANAGER_NAME?: string | string[];
+  AWS_SECRETS_MANAGER_REGION?: string;
+  AWS_SECRETS_MANAGER_TIMEOUT?: number;
+  awsSecretsManagerName?: string | string[];
+  awsSecretsManagerRegion?: string;
+  awsSecretsManagerTimeout?: number;
+}
+
 export interface SecretObject {
   [key: string]: string;
 }
@@ -66,26 +75,7 @@ const convertString = (value: string): string | number | boolean => {
   return value;
 };
 
-const convertToArray = (value: string | string[]): string[] => {
-  if (typeof value === 'string') {
-    return [value];
-  } else if (Array.isArray(value)) {
-    return value;
-  } else {
-    console.error(`ERROR: Secret name must be a string or a list of strings: ${value}`);
-
-    return [];
-  }
-};
-
-const loadSecrets = (config: {
-  AWS_SECRETS_MANAGER_NAME?: string | string[];
-  AWS_SECRETS_MANAGER_REGION?: string;
-  AWS_SECRETS_MANAGER_TIMEOUT?: number;
-  awsSecretsManagerName?: string | string[];
-  awsSecretsManagerRegion?: string;
-  awsSecretsManagerTimeout?: number;
-}): object => {
+const loadSecrets = (config: LoadSecretsArgs): object => {
   const secretName = config.AWS_SECRETS_MANAGER_NAME || config.awsSecretsManagerName;
   const region = config.AWS_SECRETS_MANAGER_REGION || config.awsSecretsManagerRegion || 'us-east-1';
   const timeout = config.AWS_SECRETS_MANAGER_TIMEOUT || config.awsSecretsManagerTimeout || 5000;
