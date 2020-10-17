@@ -2,8 +2,19 @@
 
 import awsSecretsManagerResponse from '../../test/fixtures/secrets/aws-secrets-manager-response.json';
 
-const getSecret = (_: string, __: string): object => {
-  return JSON.parse(awsSecretsManagerResponse.Value);
+import multipleAwsSecretsManagerResponse1 from '../../test/fixtures/multiple-secrets/aws-secrets-manager-bucket-1-response.json';
+import multipleAwsSecretsManagerResponse2 from '../../test/fixtures/multiple-secrets/aws-secrets-manager-bucket-2-response.json';
+
+const getSecret = (secretName: string, __: string): object => {
+  if (secretName === 'development/config-dug') {
+    return JSON.parse(awsSecretsManagerResponse.Value);
+  } else if (secretName === 'development/config-dug-1') {
+    return JSON.parse(multipleAwsSecretsManagerResponse1.Value);
+  } else if (secretName === 'development/config-dug-2') {
+    return JSON.parse(multipleAwsSecretsManagerResponse2.Value);
+  }
+
+  return {};
 };
 
 export default getSecret;

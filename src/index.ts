@@ -13,6 +13,10 @@ interface ConfigObject {
   [key: string]: string | boolean | number;
 }
 
+export interface SecretObject {
+  [key: string]: string;
+}
+
 const resolveFile = (appDirectory: string, configPath: string, fileName: string): string => {
   if (fs.existsSync(path.resolve(appDirectory, configPath, `${fileName}.ts`))) {
     debug(
@@ -62,11 +66,23 @@ const convertString = (value: string): string | number | boolean => {
   return value;
 };
 
+const convertToArray = (value: string | string[]): string[] => {
+  if (typeof value === 'string') {
+    return [value];
+  } else if (Array.isArray(value)) {
+    return value;
+  } else {
+    console.error(`ERROR: Secret name must be a string or a list of strings: ${value}`);
+
+    return [];
+  }
+};
+
 const loadSecrets = (config: {
-  AWS_SECRETS_MANAGER_NAME?: string;
+  AWS_SECRETS_MANAGER_NAME?: string | string[];
   AWS_SECRETS_MANAGER_REGION?: string;
   AWS_SECRETS_MANAGER_TIMEOUT?: number;
-  awsSecretsManagerName?: string;
+  awsSecretsManagerName?: string | string[];
   awsSecretsManagerRegion?: string;
   awsSecretsManagerTimeout?: number;
 }): object => {
@@ -75,15 +91,26 @@ const loadSecrets = (config: {
   const timeout = config.AWS_SECRETS_MANAGER_TIMEOUT || config.awsSecretsManagerTimeout || 5000;
 
   if (secretName) {
-    debug('loading config from AWS Secrets Manager', secretName, region);
+    const secrets = convertToArray(secretName).map(name => {
+      debug('loading config from AWS Secrets Manager', name, region);
 
-    const secret = getSecret(secretName, region, timeout);
+      return getSecret(name, region, timeout);
+    });
 
-    return Object.entries(secret).reduce((result: ConfigObject, [key, value]): ConfigObject => {
-      result[key] = convertString(value);
+    const mergedSecrets: SecretObject = {};
 
-      return result;
-    }, {});
+    secrets.forEach(secret => {
+      Object.assign(mergedSecrets, secret);
+    });
+
+    return Object.entries(mergedSecrets).reduce(
+      (result: ConfigObject, [key, value]): ConfigObject => {
+        result[key] = convertString(value);
+
+        return result;
+      },
+      {}
+    );
   } else {
     return {};
   }

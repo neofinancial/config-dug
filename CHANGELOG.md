@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.0 (November 28, 2019)
+
+- Add support for multiple AWS Secret buckets in the same region
+
 ## 1.4.0 (November 28, 2019)
 
 - Add support for APP_ENV
