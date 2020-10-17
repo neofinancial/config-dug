@@ -3,7 +3,7 @@ import { ConfigObject } from '.';
 
 const validate = (config: ConfigObject): ConfigObject => {
   Object.keys(config).forEach(key => {
-    if (config[key] === undefined) {
+    if (config[key] === undefined || config[key] === null) {
       console.warn(`WARNING: Found undefined config value for ${key}`);
     }
   });
