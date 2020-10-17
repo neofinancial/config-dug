@@ -95,7 +95,7 @@ export default {
 
 The default region is `us-east-1` and the default connection timeout is `5000`ms.
 
-If config-dug will warn if it detects invalid values for configs. Invalid values include:
+Config Dug will warn if it detects invalid config values. Invalid values include:
 
 - undefined
 - null
