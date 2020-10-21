@@ -88,3 +88,21 @@ test('config value that is undefined causes a warning', (): void => {
   expect(console.warn).toHaveBeenCalledWith('WARNING: Found undefined config value for KEY_4');
   expect(console.warn).toHaveBeenCalledWith('WARNING: Found undefined config value for KEY_5');
 });
+
+test('loading config values with leading and/or trailing whitespace causes a warning', (): void => {
+  const spy = jest.spyOn(global.console, 'warn').mockImplementation(() => jest.fn());
+
+  loadConfig('test/fixtures/validate');
+
+  expect(console.warn).toHaveBeenCalledWith(
+    'WARNING: Found leading and/or trailing whitespace within config value for KEY_6'
+  );
+  expect(console.warn).toHaveBeenCalledWith(
+    'WARNING: Found leading and/or trailing whitespace within config value for KEY_7'
+  );
+  expect(console.warn).toHaveBeenCalledWith(
+    'WARNING: Found leading and/or trailing whitespace within config value for KEY_8'
+  );
+
+  spy.mockRestore();
+});
