@@ -6,7 +6,7 @@ import path from 'path';
 import createDebug from 'debug';
 
 import getSecret from './get-secret';
-import validateConfig from './validate-config';
+import { validateConfig } from './validate-config';
 
 const debug = createDebug('config-dug');
 
