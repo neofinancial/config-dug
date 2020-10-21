@@ -2,7 +2,7 @@
 import { ConfigObject } from '.';
 
 const hasTrailingOrLeadingWhitespace = (value: string): boolean => {
-  const trailingOrLeadingWhiteSpace = new RegExp('^[ \\t]+|[ \\t]+$');
+  const trailingOrLeadingWhiteSpace = new RegExp('^[ \\s]+|[ \\s]+$');
 
   return trailingOrLeadingWhiteSpace.test(value);
 };
