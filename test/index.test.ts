@@ -107,6 +107,8 @@ test('config value that is undefined does not cause a warning when env is test',
 });
 
 test('loading config values with leading and/or trailing whitespace causes a warning', (): void => {
+  process.env.APP_ENV = 'staging';
+
   const spy = jest.spyOn(global.console, 'warn').mockImplementation(() => jest.fn());
 
   loadConfig('test/fixtures/validate');
@@ -122,4 +124,5 @@ test('loading config values with leading and/or trailing whitespace causes a war
   );
 
   spy.mockRestore();
+  process.env.APP_ENV = 'test';
 });
