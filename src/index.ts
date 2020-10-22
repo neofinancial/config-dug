@@ -151,7 +151,11 @@ const loadConfig = (configPath = ''): ConfigObject => {
   );
   const config = Object.assign({}, fileConfig, loadSecrets(fileConfig), loadEnvironment());
 
-  return validateConfig(config);
+  if (environment === 'test') {
+    return config;
+  } else {
+    return validateConfig(config);
+  }
 };
 
 const init = (): ConfigObject => {

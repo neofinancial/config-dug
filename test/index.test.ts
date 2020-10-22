@@ -79,7 +79,9 @@ test('loading invalid config does nothing', (): void => {
   expect(typeof invalidConfig).toBe('object');
 });
 
-test('config value that is undefined causes a warning', (): void => {
+test('config value that is undefined causes a warning when env is not test', (): void => {
+  process.env.APP_ENV = 'staging';
+
   jest.spyOn(global.console, 'warn');
 
   loadConfig('test/fixtures/validate');
@@ -87,6 +89,21 @@ test('config value that is undefined causes a warning', (): void => {
   expect(console.warn).toHaveBeenCalledWith('WARNING: Found undefined config value for KEY_3');
   expect(console.warn).toHaveBeenCalledWith('WARNING: Found undefined config value for KEY_4');
   expect(console.warn).toHaveBeenCalledWith('WARNING: Found undefined config value for KEY_5');
+
+  jest.clearAllMocks();
+  process.env.APP_ENV = 'test';
+});
+
+test('config value that is undefined does not cause a warning when env is test', (): void => {
+  jest.spyOn(global.console, 'warn');
+
+  loadConfig('test/fixtures/validate');
+
+  expect(console.warn).not.toHaveBeenCalledWith('WARNING: Found undefined config value for KEY_3');
+  expect(console.warn).not.toHaveBeenCalledWith('WARNING: Found undefined config value for KEY_4');
+  expect(console.warn).not.toHaveBeenCalledWith('WARNING: Found undefined config value for KEY_5');
+
+  jest.clearAllMocks();
 });
 
 test('loading config values with leading and/or trailing whitespace causes a warning', (): void => {
