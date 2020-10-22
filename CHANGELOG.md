@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.1 (October 17, 2020)
+
+- Suppress secret undefined warning if running tests
+
 ## 1.5.0 (October 17, 2020)
 
 - Add support for multiple AWS Secrets Manager secrets in the same region
