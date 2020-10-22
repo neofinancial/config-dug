@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.5.1 (October 17, 2020)
+## 1.5.1 (October 21, 2020)
 
 - Suppress secret undefined warning if running tests
 
