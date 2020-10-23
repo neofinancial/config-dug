@@ -16,9 +16,11 @@ export interface ConfigObject {
 
 interface LoadSecretsArgs {
   AWS_SECRETS_MANAGER_NAME?: string;
+  AWS_SECRETS_MANAGER_NAMES?: string;
   AWS_SECRETS_MANAGER_REGION?: string;
   AWS_SECRETS_MANAGER_TIMEOUT?: number;
   awsSecretsManagerName?: string;
+  awsSecretsManagerNames?: string;
   awsSecretsManagerRegion?: string;
   awsSecretsManagerTimeout?: number;
 }
@@ -84,34 +86,43 @@ const convertToArray = (value: string): string[] => {
 };
 
 const loadSecrets = (config: LoadSecretsArgs): object => {
+  const secretNames = config.AWS_SECRETS_MANAGER_NAMES || config.awsSecretsManagerNames;
   const secretName = config.AWS_SECRETS_MANAGER_NAME || config.awsSecretsManagerName;
   const region = config.AWS_SECRETS_MANAGER_REGION || config.awsSecretsManagerRegion || 'us-east-1';
   const timeout = config.AWS_SECRETS_MANAGER_TIMEOUT || config.awsSecretsManagerTimeout || 5000;
 
+  const mergedSecretNames = new Set<string>();
+
   if (secretName) {
-    const secrets = convertToArray(secretName).map(name => {
-      debug('loading config from AWS Secrets Manager', name, region);
-
-      return getSecret(name, region, timeout);
-    });
-
-    const mergedSecrets: SecretObject = {};
-
-    secrets.forEach(secret => {
-      Object.assign(mergedSecrets, secret);
-    });
-
-    return Object.entries(mergedSecrets).reduce(
-      (result: ConfigObject, [key, value]): ConfigObject => {
-        result[key] = convertString(value);
-
-        return result;
-      },
-      {}
-    );
-  } else {
-    return {};
+    mergedSecretNames.add(secretName);
   }
+
+  if (secretNames) {
+    convertToArray(secretNames).forEach(secretName => {
+      mergedSecretNames.add(secretName);
+    });
+  }
+
+  const secrets = [...mergedSecretNames].map(name => {
+    debug('loading config from AWS Secrets Manager', name, region);
+
+    return getSecret(name, region, timeout);
+  });
+
+  const mergedSecrets: SecretObject = {};
+
+  secrets.forEach(secret => {
+    Object.assign(mergedSecrets, secret);
+  });
+
+  return Object.entries(mergedSecrets).reduce(
+    (result: ConfigObject, [key, value]): ConfigObject => {
+      result[key] = convertString(value);
+
+      return result;
+    },
+    {}
+  );
 };
 
 const loadEnvironment = (): object => {
