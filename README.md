@@ -71,12 +71,22 @@ console.log(config.API_ENDPOINT);
 
 ### Using AWS Secrets Manager
 
-In order to use AWS Secrets Manager you have to add a `AWS_SECRETS_MANAGER_NAMES` or `awsSecretsManagerNames` setting to your config that specifies a comma delimited list of names of the secrets to look up. Each secret from the list is evaluated in order mean that if a specific key appears in two secrets the value will be overwritten by the last secret in the list.
+In order to use AWS Secrets Manager you have to add a `AWS_SECRETS_MANAGER_NAME` or `awsSecretsManagerName` setting to your config that specifies the names of the secrets to look up:
 
 ```ts
 // config.default.ts
 export default {
-  AWS_SECRETS_MANAGER_NAMES: 'production/myapp/config, production/myapp/another-config',
+  AWS_SECRETS_MANAGER_NAME: 'production/myapp/config',
+  API_ENDPOINT: 'https://api.kanye.rest/'
+};
+```
+
+If you need to read from multiple secret buckets, `AWS_SECRETS_MANAGER_NAMES` takes a comma separated list to allow connection to multiple secrets in AWS Secrets Manager. Each secret from the list is evaluated in order mean that if a specific key appears in two secrets the value will be overwritten by the last secret in the list.
+
+```ts
+// config.default.ts
+export default {
+  AWS_SECRETS_MANAGER_NAMES: 'production/myapp/config,production/myapp/another-config',
   API_ENDPOINT: 'https://api.kanye.rest/'
 };
 ```

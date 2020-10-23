@@ -87,7 +87,6 @@ const convertToArray = (value: string): string[] => {
 
 const loadSecrets = (config: LoadSecretsArgs): object => {
   const secretNames = config.AWS_SECRETS_MANAGER_NAMES || config.awsSecretsManagerNames;
-  /* deprecated */
   const secretName = config.AWS_SECRETS_MANAGER_NAME || config.awsSecretsManagerName;
   const region = config.AWS_SECRETS_MANAGER_REGION || config.awsSecretsManagerRegion || 'us-east-1';
   const timeout = config.AWS_SECRETS_MANAGER_TIMEOUT || config.awsSecretsManagerTimeout || 5000;
@@ -95,9 +94,6 @@ const loadSecrets = (config: LoadSecretsArgs): object => {
   const mergedSecretNames = new Set<string>();
 
   if (secretName) {
-    console.warn(
-      'config.AWS_SECRETS_MANAGER_NAME and config.awsSecretsManagerName are deprecated. Use config.AWS_SECRETS_MANAGER_NAMES and config.awsSecretsManagerNames instead.'
-    );
     mergedSecretNames.add(secretName);
   }
 
