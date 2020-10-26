@@ -1,8 +1,10 @@
 # Changelog
 
-## 1.5.1 (October 21, 2020)
+## 1.6.0 (October 26, 2020)
 
+- Warn on leading or trailing whitespace in secret value
 - Suppress secret undefined warning if running tests
+- Add `AWS_SECRETS_MANAGER_NAMES` key to define multiple secrets in a backwards compatible way
 
 ## 1.5.0 (October 17, 2020)
 
