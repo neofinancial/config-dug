@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.6.1 (October 31, 2020)
+
+- Update yarn.lock for security warning on `kind-of`
+
 ## 1.6.0 (October 26, 2020)
 
 - Warn on leading or trailing whitespace in secret value
