@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.6.1 (October 31, 2020)
+## 1.6.1 (November 13, 2020)
 
 - Update yarn.lock for security warning on `kind-of`
 
