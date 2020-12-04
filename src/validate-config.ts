@@ -12,11 +12,11 @@ const validateConfig = (config: ConfigObject): ConfigObject => {
     const value = config[key];
 
     if (value === undefined || value === null || value === 'undefined' || value === '') {
-      console.warn(`WARNING: Found undefined config value for ${key}`);
+      console.log(`WARNING: Found undefined config value for ${key}`);
     }
 
     if (typeof value === 'string' && hasTrailingOrLeadingWhitespace(value)) {
-      console.warn(
+      console.log(
         `WARNING: Found leading and/or trailing whitespace within config value for ${key}`
       );
     }

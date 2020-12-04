@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.6.2 (November 13, 2020)
+
+- Update all warnings to logs
+- Do not validate configs in developments
+
 ## 1.6.1 (November 13, 2020)
 
 - Update yarn.lock for security warning on `kind-of`
