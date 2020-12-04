@@ -2,7 +2,7 @@
 
 ## 1.6.2 (December 4, 2020)
 
-- Update all warnings to logs
+- Update all console warnings to console logs
 - Do not validate configs in developments
 
 ## 1.6.1 (November 13, 2020)
