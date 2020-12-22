@@ -141,3 +141,13 @@ test('loading config values with leading and/or trailing whitespace causes a war
   spy.mockRestore();
   process.env.APP_ENV = 'test';
 });
+
+test('loader is not called get called when option is disabled', () => {
+  const testConfig = loadConfig('test/fixtures/javascript', {
+    files: false,
+    environment: false,
+    secrets: false
+  });
+
+  expect(testConfig).toEqual({});
+});

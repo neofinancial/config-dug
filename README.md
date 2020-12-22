@@ -124,10 +124,18 @@ If you want to load config files from a directory other than the project root yo
 ```ts
 import { loadConfig } from 'config-dug';
 
-loadConfig('config');
+loadConfig('config', { files: true, environment: false, secrets: false });
 ```
 
 This will import your config files from the `config` directory. The path you specify must be relative to your project root.
+
+The second parameter contains options to specify where to load configs from. By default, Config Dug will load from all possible sources.
+
+| Option        | Default | Description                        |
+| ------------- | ------- | ---------------------------------- |
+| `files`       | `true`  | loads from `config.[env].js` files |
+| `environment` | `true`  | loads from `process.env`           |
+| `secrets`     | `true`  | loads from AWS Secrets Manager     |
 
 ### Debugging
 

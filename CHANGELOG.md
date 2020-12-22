@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.0 (December 21, 2020)
+
+- Add options to `loadConfig` to specify the sources to load from
+
 ## 1.6.2 (December 4, 2020)
 
 - Update all console warnings to console logs

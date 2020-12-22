@@ -14,6 +14,12 @@ export interface ConfigObject {
   [key: string]: string | boolean | number;
 }
 
+interface LoadConfigOptions {
+  files?: boolean;
+  environment?: boolean;
+  secrets?: boolean;
+}
+
 interface LoadSecretsArgs {
   AWS_SECRETS_MANAGER_NAME?: string;
   AWS_SECRETS_MANAGER_NAMES?: string;
@@ -135,7 +141,7 @@ const loadEnvironment = (): object => {
   }, {});
 };
 
-const loadConfig = (configPath = ''): ConfigObject => {
+const loadFiles = (configPath: string): object => {
   const appDirectory = fs.realpathSync(process.cwd());
   const environment = process.env.APP_ENV
     ? process.env.APP_ENV
@@ -160,7 +166,22 @@ const loadConfig = (configPath = ''): ConfigObject => {
     localEnvironmentConfig,
     localConfig
   );
-  const config = Object.assign({}, fileConfig, loadSecrets(fileConfig), loadEnvironment());
+
+  return fileConfig;
+};
+
+const loadConfig = (configPath = '', options: LoadConfigOptions = {}): ConfigObject => {
+  const {
+    files: enableFiles = true,
+    environment: enableEnvironment = true,
+    secrets: enableSecrets = true
+  } = options;
+
+  const fileConfig = enableFiles ? loadFiles(configPath) : {};
+  const secretsConfig = enableSecrets ? loadSecrets(fileConfig) : {};
+  const environmentConfig = enableEnvironment ? loadEnvironment() : {};
+
+  const config = Object.assign({}, fileConfig, secretsConfig, environmentConfig);
 
   if (environment === 'test' || environment === 'development') {
     return config;
