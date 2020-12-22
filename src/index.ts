@@ -141,13 +141,8 @@ const loadEnvironment = (): object => {
   }, {});
 };
 
-const loadFiles = (configPath: string): object => {
+const loadFiles = (configPath: string, environment: string): object => {
   const appDirectory = fs.realpathSync(process.cwd());
-  const environment = process.env.APP_ENV
-    ? process.env.APP_ENV
-    : process.env.NODE_ENV
-    ? process.env.NODE_ENV
-    : 'development';
 
   debug('loading config from', path.resolve(appDirectory, configPath));
 
@@ -177,7 +172,13 @@ const loadConfig = (configPath = '', options: LoadConfigOptions = {}): ConfigObj
     secrets: enableSecrets = true
   } = options;
 
-  const fileConfig = enableFiles ? loadFiles(configPath) : {};
+  const environment = process.env.APP_ENV
+    ? process.env.APP_ENV
+    : process.env.NODE_ENV
+    ? process.env.NODE_ENV
+    : 'development';
+
+  const fileConfig = enableFiles ? loadFiles(configPath, environment) : {};
   const secretsConfig = enableSecrets ? loadSecrets(fileConfig) : {};
   const environmentConfig = enableEnvironment ? loadEnvironment() : {};
 
