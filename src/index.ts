@@ -85,11 +85,28 @@ const convertToArray = (value: string): string[] => {
     .filter(entry => !!entry);
 };
 
-const loadSecrets = (config: LoadSecretsArgs): object => {
-  const secretNames = config.AWS_SECRETS_MANAGER_NAMES || config.awsSecretsManagerNames;
-  const secretName = config.AWS_SECRETS_MANAGER_NAME || config.awsSecretsManagerName;
-  const region = config.AWS_SECRETS_MANAGER_REGION || config.awsSecretsManagerRegion || 'us-east-1';
-  const timeout = config.AWS_SECRETS_MANAGER_TIMEOUT || config.awsSecretsManagerTimeout || 5000;
+const loadSecrets = (config: LoadSecretsArgs, overrides: LoadSecretsArgs): object => {
+  const secretNames =
+    overrides.AWS_SECRETS_MANAGER_NAMES ||
+    config.AWS_SECRETS_MANAGER_NAMES ||
+    config.awsSecretsManagerNames;
+
+  const secretName =
+    overrides.AWS_SECRETS_MANAGER_NAME ||
+    config.AWS_SECRETS_MANAGER_NAME ||
+    config.awsSecretsManagerName;
+
+  const region =
+    overrides.AWS_SECRETS_MANAGER_REGION ||
+    config.AWS_SECRETS_MANAGER_REGION ||
+    config.awsSecretsManagerRegion ||
+    'us-east-1';
+
+  const timeout =
+    overrides.AWS_SECRETS_MANAGER_TIMEOUT ||
+    config.AWS_SECRETS_MANAGER_TIMEOUT ||
+    config.awsSecretsManagerTimeout ||
+    5000;
 
   const mergedSecretNames = new Set<string>();
 
@@ -160,7 +177,15 @@ const loadConfig = (configPath = ''): ConfigObject => {
     localEnvironmentConfig,
     localConfig
   );
-  const config = Object.assign({}, fileConfig, loadSecrets(fileConfig), loadEnvironment());
+
+  const environmentVars = loadEnvironment();
+
+  const config = Object.assign(
+    {},
+    fileConfig,
+    loadSecrets(fileConfig, environmentVars),
+    environmentVars
+  );
 
   if (environment === 'test' || environment === 'development') {
     return config;

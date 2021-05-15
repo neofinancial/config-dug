@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.0 (May 14, 2021)
+
+- Add feature to override aws secrets configs with environment variables
+
 ## 1.6.2 (December 4, 2020)
 
 - Update all console warnings to console logs

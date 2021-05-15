@@ -29,3 +29,18 @@ test('loading multiple AWS Secrets Manager secrets works', (): void => {
     TEST_ANOTHER_INTEGER: 23
   });
 });
+
+test('overriding AWS Secrets Manager secrets with env vars works', (): void => {
+  process.env.AWS_SECRETS_MANAGER_NAMES = 'development/config-dug-1';
+
+  const testConfig = loadConfig('test/fixtures/multiple-secrets');
+
+  expect(testConfig).toMatchObject({
+    AWS_SECRETS_MANAGER_NAMES: 'development/config-dug-1',
+    AWS_SECRETS_MANAGER_NAME: 'development/config-dug-1',
+    DB_USERNAME: 'config-dug',
+    DB_PASSWORD: 'secret',
+    TEST_BOOLEAN: true,
+    TEST_INTEGER: 42
+  });
+});
