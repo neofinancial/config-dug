@@ -12,9 +12,7 @@
     "url": "https://github.com/neofinancial/config-dug.git"
   },
   "engines": {
-    "node": ">=8.0.0",
-    "npm": ">= 8.0.0",
-    "yarn": "please-use-npm"
+    "node": ">=8.0.0"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
