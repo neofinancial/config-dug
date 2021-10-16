@@ -26,7 +26,6 @@
     "format": "prettier --write \"**/*.{ts,js,json,graphql,md}\"",
     "format:check": "prettier --debug-check \"**/*.{ts,js,json,graphql,md}\"",
     "prepublishOnly": "rimraf build && tsc -p tsconfig.build.json",
-    "prepare": "husky install",
     "pre-commit": "lint-staged"
   },
   "files": [
