@@ -6,7 +6,6 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "license": "MIT",
-  "private": false,
   "homepage": "https://github.com/neofinancial/config-dug",
   "repository": {
     "type": "git",
