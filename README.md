@@ -52,7 +52,7 @@ By default your config files need to be placed in the root directory of your pro
 Import `config-dug` anywhere in your code where you want to access your config. All of your settings are available on the imported object:
 
 ```ts
-// config.default.ts
+// app.ts
 import config from 'config-dug';
 
 console.log(config.API_ENDPOINT);
@@ -73,6 +73,7 @@ console.log(config.API_ENDPOINT);
 In order to use AWS Secrets Manager you have to add a `AWS_SECRETS_MANAGER_NAME` or `awsSecretsManagerName` setting to your config that specifies the names of the secrets to look up:
 
 ```ts
+// config.default.ts
 export default {
   AWS_SECRETS_MANAGER_NAME: 'production/myapp/config',
   API_ENDPOINT: 'https://api.kanye.rest/',
