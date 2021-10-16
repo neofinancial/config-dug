@@ -12,7 +12,7 @@ test('loading secrets from AWS Secrets Manager works', (): void => {
     TEST_BOOLEAN: true,
     TEST_INTEGER: 42,
     TEST_FLOAT: 4.2,
-    TEST_NUMBER_LIST: '123456,123456'
+    TEST_NUMBER_LIST: '123456,123456',
   });
 });
 
@@ -26,7 +26,7 @@ test('loading multiple AWS Secrets Manager secrets works', (): void => {
     DB_PASSWORD: 'secret',
     TEST_BOOLEAN: true,
     TEST_INTEGER: 22,
-    TEST_ANOTHER_INTEGER: 23
+    TEST_ANOTHER_INTEGER: 23,
   });
 });
 
@@ -41,6 +41,6 @@ test('overriding AWS Secrets Manager secrets with env vars works', (): void => {
     DB_USERNAME: 'config-dug',
     DB_PASSWORD: 'secret',
     TEST_BOOLEAN: true,
-    TEST_INTEGER: 42
+    TEST_INTEGER: 42,
   });
 });

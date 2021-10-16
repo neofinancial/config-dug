@@ -21,16 +21,15 @@ Config loader with support for AWS Secrets Manager.
 `config-dug` looks in several places for your config, including config files in your project, environment variables and [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/). `config-dug` allows you to write your config files in either TypeScript or JavaScript. You are expected to export a default object from your config file:
 
 ```ts
-// config.default.ts
 export default {
-  API_ENDPOINT: 'https://api.kanye.rest/'
+  API_ENDPOINT: 'https://api.kanye.rest/',
 };
 ```
 
 ```js
 // config.default.js
 module.exports = {
-  API_ENDPOINT: 'https://api.kanye.rest/'
+  API_ENDPOINT: 'https://api.kanye.rest/',
 };
 ```
 
@@ -52,11 +51,9 @@ By default your config files need to be placed in the root directory of your pro
 Import `config-dug` anywhere in your code where you want to access your config. All of your settings are available on the imported object:
 
 ```ts
-// app.ts
 import config from 'config-dug';
 
 console.log(config.API_ENDPOINT);
-// https://api.kanye.rest/
 ```
 
 ```js
@@ -74,20 +71,18 @@ console.log(config.API_ENDPOINT);
 In order to use AWS Secrets Manager you have to add a `AWS_SECRETS_MANAGER_NAME` or `awsSecretsManagerName` setting to your config that specifies the names of the secrets to look up:
 
 ```ts
-// config.default.ts
 export default {
   AWS_SECRETS_MANAGER_NAME: 'production/myapp/config',
-  API_ENDPOINT: 'https://api.kanye.rest/'
+  API_ENDPOINT: 'https://api.kanye.rest/',
 };
 ```
 
 If you need to read from multiple secret buckets, `AWS_SECRETS_MANAGER_NAMES` takes a comma separated list to allow connection to multiple secrets in AWS Secrets Manager. Each secret from the list is evaluated in order mean that if a specific key appears in two secrets the value will be overwritten by the last secret in the list.
 
 ```ts
-// config.default.ts
 export default {
   AWS_SECRETS_MANAGER_NAMES: 'production/myapp/config,production/myapp/another-config',
-  API_ENDPOINT: 'https://api.kanye.rest/'
+  API_ENDPOINT: 'https://api.kanye.rest/',
 };
 ```
 
@@ -139,8 +134,8 @@ This will import your config files from the `config` directory. The path you spe
 
 1. Fork this repo
 1. Clone the forked repo
-1. Install dependencies: `yarn`
-1. Run tests: `yarn test`
+1. Install dependencies: `npm install` OR `npm i`
+1. Run tests: `npm run test`
 
 ## Publishing
 

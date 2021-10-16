@@ -6,5 +6,5 @@ export default {
   KEY_5: '',
   KEY_6: 'value 2  ',
   KEY_7: ' value 3',
-  KEY_8: '  value 4   '
+  KEY_8: '  value 4   ',
 };

@@ -9,8 +9,8 @@ const getSecret = (secretName: string, region: string, timeout: number): SecretO
     const secret = awsParamStore.getParameterSync(`/aws/reference/secretsmanager/${secretName}`, {
       region,
       httpOptions: {
-        timeout
-      }
+        timeout,
+      },
     });
 
     return JSON.parse(secret.Value);
@@ -18,7 +18,7 @@ const getSecret = (secretName: string, region: string, timeout: number): SecretO
     console.error('ERROR: Unable to get secret from AWS Secrets Manager', {
       secretName,
       region,
-      timeout
+      timeout,
     });
 
     console.error(error);

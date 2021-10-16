@@ -18,7 +18,7 @@ test('loading config from environment variable works', (): void => {
     KEY_7: 'local key',
     KEY_8: 1,
     KEY_9: 'bar',
-    KEY_11: '123456,123456'
+    KEY_11: '123456,123456',
   });
 
   delete process.env.KEY_3;
