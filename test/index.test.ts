@@ -12,7 +12,7 @@ test('loading TypeScript config works', (): void => {
     KEY_5: 4.2,
     KEY_7: 'local key',
     KEY_8: 1,
-    KEY_9: 'bar'
+    KEY_9: 'bar',
   });
 });
 
@@ -27,7 +27,7 @@ test('loading JavaScript config works', (): void => {
     KEY_5: 4.2,
     KEY_7: 'local key',
     KEY_8: 1,
-    KEY_9: 'bar'
+    KEY_9: 'bar',
   });
 });
 
@@ -46,7 +46,7 @@ test('loading staging environment config with NODE_ENV works', (): void => {
     KEY_7: 'local key',
     KEY_8: 3,
     KEY_9: 'bar',
-    KEY_10: 'staging local key'
+    KEY_10: 'staging local key',
   });
 
   process.env.NODE_ENV = 'test';
@@ -67,7 +67,7 @@ test('loading staging environment config with APP_ENV works', (): void => {
     KEY_7: 'local key',
     KEY_8: 3,
     KEY_9: 'bar',
-    KEY_10: 'staging local key'
+    KEY_10: 'staging local key',
   });
 
   process.env.NODE_ENV = 'test';

@@ -5,7 +5,7 @@ import awsSecretsManagerResponse from '../../test/fixtures/secrets/aws-secrets-m
 import multipleAwsSecretsManagerResponse1 from '../../test/fixtures/multiple-secrets/aws-secrets-manager-1-response.json';
 import multipleAwsSecretsManagerResponse2 from '../../test/fixtures/multiple-secrets/aws-secrets-manager-2-response.json';
 
-const getSecret = (secretName: string, __: string): object => {
+const getSecret = (secretName: string, __: string): Record<string, unknown> => {
   if (secretName === 'development/config-dug') {
     return JSON.parse(awsSecretsManagerResponse.Value);
   } else if (secretName === 'development/config-dug-1') {

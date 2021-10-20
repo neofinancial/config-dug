@@ -49,11 +49,11 @@ const resolveFile = (appDirectory: string, configPath: string, fileName: string)
   } else {
     debug('unable to resolve config file', fileName);
 
-    return undefined;
+    return;
   }
 };
 
-const loadFile = (filePath: string): object => {
+const loadFile = (filePath: string): Record<string, unknown> => {
   if (filePath) {
     debug('loading config file', filePath);
 
@@ -72,8 +72,8 @@ const loadFile = (filePath: string): object => {
 const convertString = (value: string): string | number | boolean => {
   if (value.toLowerCase() === 'true') return true;
   if (value.toLowerCase() === 'false') return false;
-  if (value.match(/^\d+\.\d+$/)) return parseFloat(value);
-  if (value.match(/^\d+$/)) return parseInt(value, 10);
+  if (value.match(/^\d+\.\d+$/)) return Number.parseFloat(value);
+  if (value.match(/^\d+$/)) return Number.parseInt(value, 10);
 
   return value;
 };
@@ -81,11 +81,14 @@ const convertString = (value: string): string | number | boolean => {
 const convertToArray = (value: string): string[] => {
   return value
     .split(',')
-    .map(entry => entry.trim())
-    .filter(entry => !!entry);
+    .map((entry) => entry.trim())
+    .filter((entry) => !!entry);
 };
 
-const loadSecrets = (config: LoadSecretsArgs, overrides: LoadSecretsArgs): object => {
+const loadSecrets = (
+  config: LoadSecretsArgs,
+  overrides: LoadSecretsArgs
+): Record<string, unknown> => {
   const secretNames =
     overrides.AWS_SECRETS_MANAGER_NAMES ||
     config.AWS_SECRETS_MANAGER_NAMES ||
@@ -115,12 +118,12 @@ const loadSecrets = (config: LoadSecretsArgs, overrides: LoadSecretsArgs): objec
   }
 
   if (secretNames) {
-    convertToArray(secretNames).forEach(secretName => {
+    convertToArray(secretNames).forEach((secretName) => {
       mergedSecretNames.add(secretName);
     });
   }
 
-  const secrets = [...mergedSecretNames].map(name => {
+  const secrets = [...mergedSecretNames].map((name) => {
     debug('loading config from AWS Secrets Manager', name, region);
 
     return getSecret(name, region, timeout);
@@ -128,10 +131,11 @@ const loadSecrets = (config: LoadSecretsArgs, overrides: LoadSecretsArgs): objec
 
   const mergedSecrets: SecretObject = {};
 
-  secrets.forEach(secret => {
+  secrets.forEach((secret) => {
     Object.assign(mergedSecrets, secret);
   });
 
+  // eslint-disable-next-line unicorn/no-reduce
   return Object.entries(mergedSecrets).reduce(
     (result: ConfigObject, [key, value]): ConfigObject => {
       result[key] = convertString(value);
@@ -142,9 +146,10 @@ const loadSecrets = (config: LoadSecretsArgs, overrides: LoadSecretsArgs): objec
   );
 };
 
-const loadEnvironment = (): object => {
+const loadEnvironment = (): Record<string, unknown> => {
   debug('loading config from environment variables');
 
+  // eslint-disable-next-line unicorn/no-reduce
   return Object.entries(process.env).reduce((result: ConfigObject, [key, value]): ConfigObject => {
     result[key] = convertString(value);
 

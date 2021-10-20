@@ -5,5 +5,5 @@ module.exports = {
   KEY_4: 42,
   KEY_5: 4.2,
   KEY_8: 1,
-  KEY_9: 'foo'
+  KEY_9: 'foo',
 };

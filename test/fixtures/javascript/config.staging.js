@@ -1,4 +1,4 @@
 module.exports = {
   KEY_6: 'staging environment key',
-  KEY_8: 3
+  KEY_8: 3,
 };

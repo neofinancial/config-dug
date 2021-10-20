@@ -8,7 +8,7 @@ const hasTrailingOrLeadingWhitespace = (value: string): boolean => {
 };
 
 const validateConfig = (config: ConfigObject): ConfigObject => {
-  Object.keys(config).forEach(key => {
+  Object.keys(config).forEach((key) => {
     const value = config[key];
 
     if (value === undefined || value === null || value === 'undefined' || value === '') {

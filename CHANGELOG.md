@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.7.1 (October 16, 2021)
+
+- switched to npm
+- updated dependencies
+
 ## 1.7.0 (May 14, 2021)
 
 - Add feature to override aws secrets configs with environment variables

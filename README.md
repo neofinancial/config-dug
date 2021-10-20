@@ -23,14 +23,14 @@ Config loader with support for AWS Secrets Manager.
 ```ts
 // config.default.ts
 export default {
-  API_ENDPOINT: 'https://api.kanye.rest/'
+  API_ENDPOINT: 'https://api.kanye.rest/',
 };
 ```
 
 ```js
 // config.default.js
 module.exports = {
-  API_ENDPOINT: 'https://api.kanye.rest/'
+  API_ENDPOINT: 'https://api.kanye.rest/',
 };
 ```
 
@@ -56,7 +56,6 @@ Import `config-dug` anywhere in your code where you want to access your config. 
 import config from 'config-dug';
 
 console.log(config.API_ENDPOINT);
-// https://api.kanye.rest/
 ```
 
 ```js
@@ -77,7 +76,7 @@ In order to use AWS Secrets Manager you have to add a `AWS_SECRETS_MANAGER_NAME`
 // config.default.ts
 export default {
   AWS_SECRETS_MANAGER_NAME: 'production/myapp/config',
-  API_ENDPOINT: 'https://api.kanye.rest/'
+  API_ENDPOINT: 'https://api.kanye.rest/',
 };
 ```
 
@@ -87,7 +86,7 @@ If you need to read from multiple secret buckets, `AWS_SECRETS_MANAGER_NAMES` ta
 // config.default.ts
 export default {
   AWS_SECRETS_MANAGER_NAMES: 'production/myapp/config,production/myapp/another-config',
-  API_ENDPOINT: 'https://api.kanye.rest/'
+  API_ENDPOINT: 'https://api.kanye.rest/',
 };
 ```
 
@@ -139,8 +138,8 @@ This will import your config files from the `config` directory. The path you spe
 
 1. Fork this repo
 1. Clone the forked repo
-1. Install dependencies: `yarn`
-1. Run tests: `yarn test`
+1. Install dependencies: `npm install` OR `npm i`
+1. Run tests: `npm run test`
 
 ## Publishing
 
