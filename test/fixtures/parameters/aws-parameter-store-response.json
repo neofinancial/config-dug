@@ -1,0 +1,23 @@
+{
+  "InvalidParameters": ["target-service/oops-not-found"],
+  "Parameters": [
+    {
+      "Name": "target-service/allowed-greek-letters-list",
+      "Type": "StringList",
+      "Value": "alpha,beta,gamma",
+      "Version": 1,
+      "LastModifiedDate": 1582154764.222,
+      "ARN": "arn:aws:ssm:us-east-1:111222333444:parameter/target-service/allowed-greek-letters-list",
+      "DataType": "text"
+    },
+    {
+      "Name": "target-service/sqs-consume-important-event-url",
+      "Type": "String",
+      "Value": "https://sqs.us-east-1.amazonaws.com/111222333444/consume-important-event",
+      "Version": 3,
+      "LastModifiedDate": 1582156117.545,
+      "ARN": "arn:aws:ssm:us-east-1:111222333444:parameter/target-service/sqs-consume-important-event-url",
+      "DataType": "text"
+    }
+  ]
+}

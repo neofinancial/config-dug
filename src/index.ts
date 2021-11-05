@@ -6,12 +6,19 @@ import path from 'path';
 import createDebug from 'debug';
 
 import getSecret from './get-secret';
+import getParameters from './get-parameters';
 import { validateConfig } from './validate-config';
 
 const debug = createDebug('config-dug');
 
 export interface ConfigObject {
   [key: string]: string | boolean | number;
+}
+
+interface LoadParameterArgs {
+  AWS_REGION?: string;
+  AWS_PARAMETER_NAMES?: Record<string, string>;
+  AWS_PARAMETER_TIMEOUT?: number;
 }
 
 interface LoadSecretsArgs {
@@ -83,6 +90,29 @@ const convertToArray = (value: string): string[] => {
     .split(',')
     .map((entry) => entry.trim())
     .filter((entry) => !!entry);
+};
+
+const loadParams = (
+  config: LoadParameterArgs,
+  overrides: LoadParameterArgs
+): Record<string, unknown> => {
+  const region = overrides.AWS_REGION || config.AWS_REGION || 'us-east-1';
+
+  const parameterNames = overrides.AWS_PARAMETER_NAMES || config.AWS_PARAMETER_NAMES || '';
+
+  const timeout = overrides.AWS_PARAMETER_TIMEOUT || config.AWS_PARAMETER_TIMEOUT || 5000;
+
+  const parameterResults: Record<string, unknown> = {};
+
+  if (parameterNames) {
+    const params = getParameters(parameterNames, region, timeout);
+
+    for (const key in params) {
+      parameterResults[key] = convertString(params[key]);
+    }
+  }
+
+  return parameterResults;
 };
 
 const loadSecrets = (
@@ -188,6 +218,7 @@ const loadConfig = (configPath = ''): ConfigObject => {
   const config = Object.assign(
     {},
     fileConfig,
+    loadParams(fileConfig, environmentVars),
     loadSecrets(fileConfig, environmentVars),
     environmentVars
   );
