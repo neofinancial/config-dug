@@ -1,6 +1,7 @@
 # Config Dug
 
 [![Build status](https://github.com/neofinancial/config-dug/workflows/CI/badge.svg)](https://github.com/neofinancial/config-dug/actions)
+[![coverage](https://coverage.neotools.ca/api/badge/master/4C8hhW7NzS4PKdA9C3NqNM)](https://coverage.neotools.ca/coverage/neofinancial/config-dug)
 [![codecov](https://codecov.io/gh/neofinancial/config-dug/branch/master/graph/badge.svg)](https://codecov.io/gh/neofinancial/config-dug)
 ![TypeScript 3.7.2](https://img.shields.io/badge/TypeScript-3.7.2-brightgreen.svg)
 
