@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.7.2 (March 16, 2022)
+
+- Added a warning when using config.local
+- Added a test for this behavior
+
 ## 1.7.1 (October 16, 2021)
 
 - switched to npm
