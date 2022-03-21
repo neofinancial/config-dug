@@ -61,9 +61,9 @@ const loadFile = (filePath: string): Record<string, unknown> => {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       const config = require(filePath);
 
-      if (filePath.includes('config.local')) {
+      if (filePath.match(/config.+local/)) {
         console.log(
-          'WARNING: Found config.local file, be cautious that this file could be published on the build phase.'
+          'WARNING: Found a local config file, be cautious that this file could be published on the build phase.'
         );
       }
 
