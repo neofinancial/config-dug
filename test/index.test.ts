@@ -149,9 +149,7 @@ test('loading a local config will cause a warning', (): void => {
 
   loadConfig('test/fixtures/typescript');
 
-  expect(console.log).toHaveBeenCalledWith(
-    'WARNING: Found a local config file, be cautious that this file could be published on the build phase.'
-  );
+  expect(console.log).toHaveBeenCalledWith('WARNING: Found a local config file config.local.ts');
 
   spy.mockRestore();
   process.env.APP_ENV = 'test';

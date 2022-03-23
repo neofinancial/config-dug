@@ -62,9 +62,9 @@ const loadFile = (filePath: string): Record<string, unknown> => {
       const config = require(filePath);
 
       if (filePath.match(/config.+local/)) {
-        console.log(
-          'WARNING: Found a local config file, be cautious that this file could be published on the build phase.'
-        );
+        const fileName = filePath.split('/').pop();
+
+        console.log(`WARNING: Found a local config file ${fileName}`);
       }
 
       return config.default ? config.default : config;
