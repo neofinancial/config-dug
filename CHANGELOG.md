@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.7.2 (March 23, 2022)
+
+- Add a warning when a local config file is found
+
 ## 1.7.1 (October 16, 2021)
 
 - switched to npm

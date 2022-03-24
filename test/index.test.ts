@@ -141,3 +141,16 @@ test('loading config values with leading and/or trailing whitespace causes a war
   spy.mockRestore();
   process.env.APP_ENV = 'test';
 });
+
+test('loading a local config will cause a warning', (): void => {
+  process.env.APP_ENV = 'development';
+
+  const spy = jest.spyOn(global.console, 'log').mockImplementation(() => jest.fn());
+
+  loadConfig('test/fixtures/typescript');
+
+  expect(console.log).toHaveBeenCalledWith('WARNING: Found a local config file config.local.ts');
+
+  spy.mockRestore();
+  process.env.APP_ENV = 'test';
+});
