@@ -24,14 +24,14 @@ Config loader with support for AWS Secrets Manager.
 ```ts
 // config.default.ts
 export default {
-  API_ENDPOINT: 'https://api.kanye.rest/',
+  API_ENDPOINT: 'https://api.example.com/',
 };
 ```
 
 ```js
 // config.default.js
 module.exports = {
-  API_ENDPOINT: 'https://api.kanye.rest/',
+  API_ENDPOINT: 'https://api.example.com/',
 };
 ```
 
@@ -64,7 +64,7 @@ console.log(config.API_ENDPOINT);
 const config = require('config-dug').default;
 
 console.log(config.API_ENDPOINT);
-// https://api.kanye.rest/
+// https://api.example.com/
 ```
 
 > :warning: You must use `require('config-dug').default` in JavaScript files. If you exclude `.default` Config Dug will not work.
@@ -77,7 +77,7 @@ In order to use AWS Secrets Manager you have to add a `AWS_SECRETS_MANAGER_NAME`
 // config.default.ts
 export default {
   AWS_SECRETS_MANAGER_NAME: 'production/myapp/config',
-  API_ENDPOINT: 'https://api.kanye.rest/',
+  API_ENDPOINT: 'https://api.example.com/',
 };
 ```
 
@@ -87,7 +87,7 @@ If you need to read from multiple secret buckets, `AWS_SECRETS_MANAGER_NAMES` ta
 // config.default.ts
 export default {
   AWS_SECRETS_MANAGER_NAMES: 'production/myapp/config,production/myapp/another-config',
-  API_ENDPOINT: 'https://api.kanye.rest/',
+  API_ENDPOINT: 'https://api.example.com/',
 };
 ```
 
@@ -100,7 +100,7 @@ export default {
   AWS_SECRETS_MANAGER_NAME: 'production/myapp/config',
   AWS_SECRETS_MANAGER_REGION: 'us-west-2',
   AWS_SECRETS_MANAGER_TIMEOUT: 2000
-  API_ENDPOINT: 'https://api.somecompany.com'
+  API_ENDPOINT: 'https://api.example.com'
 };
 ```
 
