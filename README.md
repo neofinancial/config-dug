@@ -69,6 +69,12 @@ console.log(config.API_ENDPOINT);
 
 > :warning: You must use `require('config-dug').default` in JavaScript files. If you exclude `.default` Config Dug will not work.
 
+### Environment Variables
+
+`config-dug` will add all your environment variables to the `config` object. This can have unintended consequences if one of your config keys has the same name as an existing, unrelated environment variable.
+
+> :warning: `config-dug` is only intended to be used on the server. Your server already has access to your full environment in `process.env`. If you use `config-dug` in server rendered client applications you risk exposing your server's environment to the client.
+
 ### Using AWS Secrets Manager
 
 In order to use AWS Secrets Manager you have to add a `AWS_SECRETS_MANAGER_NAME` or `awsSecretsManagerName` setting to your config that specifies the names of the secrets to look up:
