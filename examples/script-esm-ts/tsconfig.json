@@ -1,0 +1,8 @@
+{
+  "extends": "@tsconfig/node16",
+  "ts-node": {
+    "swc": true,
+    "esm": true
+  },
+  "include": ["./**/*"]
+}

@@ -1,4 +1,8 @@
-# Changelog
+# Config Dug Changelog
+
+## 2.0.0 (TBD)
+
+New and improved Config Dug 2.0
 
 ## 1.7.2 (March 23, 2022)
 

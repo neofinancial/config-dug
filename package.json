@@ -1,10 +1,8 @@
 {
   "name": "config-dug",
-  "version": "1.7.2",
-  "description": "Config loader with support for AWS Secrets Manager",
+  "version": "2.0.0",
+  "description": "Config management library for Node.js with support for multiple environments, config files, environment variables and plugins",
   "author": "Neo Financial Engineering <engineering@neofinancial.com>",
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
   "license": "MIT",
   "homepage": "https://github.com/neofinancial/config-dug",
   "repository": {
@@ -12,58 +10,30 @@
     "url": "https://github.com/neofinancial/config-dug.git"
   },
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=16.0.0",
+    "npm": ">=9.0.0"
   },
+  "workspaces": [
+    "examples/*",
+    "packages/*"
+  ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
-    "watch": "tsc --watch -p tsconfig.build.json",
-    "clean": "rimraf build",
-    "test": "jest",
-    "lint": "eslint \"**/*.{ts,js}\"",
-    "format": "prettier --write \"**/*.{ts,js,json,graphql,md}\"",
-    "format:check": "prettier --debug-check \"**/*.{ts,js,json,graphql,md}\"",
-    "prepublishOnly": "rimraf build && tsc -p tsconfig.build.json",
-    "pre-commit": "lint-staged"
+    "clean": "rimraf packages/*/build",
+    "clean:modules": "rimraf node_modules examples/*/node_modules packages/*/node_modules",
+    "format": "prettier --write \"**/*.{ts,js,cjs,mjs,json,md}\"",
+    "format:check": "prettier --debug-check \"**/*.{ts,js,cjs,mjs,json,md}\"",
+    "pre-commit": "lint-staged",
+    "prepare": "husky install"
   },
-  "files": [
-    "/build/**/*.js",
-    "/build/**/*.d.ts"
-  ],
-  "keywords": [
-    "config",
-    "configuration",
-    "typescript",
-    "javascript",
-    "node"
-  ],
   "lint-staged": {
-    "*.{ts,js}": [
-      "eslint --max-warnings 100",
-      "git add"
-    ],
-    "*.{ts,js,json,md,yml}": [
-      "prettier --write",
-      "git add"
+    "*.{ts,js,cjs,mjs,json,md,yaml,yml}": [
+      "prettier --write"
     ]
   },
-  "dependencies": {
-    "aws-param-store": "^3.2.0",
-    "aws-sdk": "^2.1009.0",
-    "debug": "^4.3.2"
-  },
   "devDependencies": {
-    "@types/aws-param-store": "^2.1.1",
-    "@types/debug": "^4.1.7",
-    "@types/jest": "^27.0.2",
-    "@types/node": "^12.0.0",
-    "eslint": "^7.13.0",
-    "eslint-config-neo": "^0.6.2",
     "husky": "^7.0.2",
-    "jest": "^27.2.5",
     "lint-staged": "^11.2.3",
     "prettier": "^2.4.1",
-    "rimraf": "^3.0.2",
-    "ts-jest": "^27.0.7",
-    "typescript": "~4.4.4"
+    "rimraf": "^3.0.2"
   }
 }
