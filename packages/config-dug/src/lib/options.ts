@@ -14,6 +14,7 @@ const optionsSchema = z
     printConfig: z.boolean().optional(),
     strict: z.boolean().optional(),
     warnOnLocalConfigFile: z.boolean().optional(),
+    reloadInterval: z.string().optional(),
   })
   .strict();
 
@@ -26,6 +27,7 @@ const optionsWithDefaultsSchema = z.object({
   printConfig: z.boolean().default(true),
   strict: z.boolean().default(false),
   warnOnLocalConfigFile: z.boolean().default(true),
+  reloadInterval: z.string().default('10s'),
 });
 
 const getOptions = (options: ConfigDugOptions): ConfigDugOptionsWithDefaults => {

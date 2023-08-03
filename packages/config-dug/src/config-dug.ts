@@ -1,6 +1,7 @@
 import EventEmitter from 'events';
 import createDebug from 'debug';
 import { z } from 'zod';
+import ms from 'ms';
 
 import { getOptions, ConfigDugOptions, ConfigDugOptionsWithDefaults } from './lib/options.js';
 import { recordOrigin, recordOriginDefaults, mergeOrigins } from './lib/origins.js';
@@ -180,6 +181,12 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
     debug('load validated values', this.validatedValues);
 
     this.loaded = true;
+
+    const reloadInterval = ms(this.options.reloadInterval);
+
+    setTimeout(async () => {
+      await this.reload();
+    }, reloadInterval);
   }
 
   private async loadConfigFile(filename: string): Promise<UntypedConfig> {
