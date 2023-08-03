@@ -149,6 +149,21 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
     this.emit('config-reloaded', this.validatedValues);
   }
 
+  /**
+   * Force reloads the config from a specific plugin
+   *
+   * @returns Promise<void>
+   */
+  public async reloadPluginConfig(plugin: any): Promise<void> {
+    debug('reloading plugin config');
+
+    const pluginRawValues = await this.loadPluginConfig(plugin);
+
+    this.validateRawValues({ ...this.validateRawValues, ...pluginRawValues });
+
+    this.emit('plugin-config-reloaded', this.validatedValues);
+  }
+
   private async loadConfig(): Promise<void> {
     const environmentName = getEnvironmentName(this.options.envKey);
 
@@ -157,8 +172,7 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
       this.pluginsInitialized = true;
     }
 
-    this.valueOrigins = {};
-    this.rawValues = {
+    const rawValues = {
       ...(await this.loadConfigFile('config.default')),
       ...(await this.loadConfigFile(`config.${environmentName}`)),
       ...(await this.loadPlugins()),
@@ -167,18 +181,9 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
       ...this.loadEnvironment(Object.keys(this.schema)),
     };
 
-    debug('load raw values', this.rawValues);
+    debug('load raw values', rawValues);
 
-    const [validatedValues, defaults] = parseConfig(this.schema, this.rawValues, this.options.strict);
-
-    this.validatedValues = validatedValues;
-    this.valueOrigins = recordOriginDefaults(this.valueOrigins, defaults, 'default');
-
-    if (this.options.printConfig) {
-      printConfig(this.getRedactedConfig(), this.valueOrigins);
-    }
-
-    debug('load validated values', this.validatedValues);
+    this.validateRawValues(rawValues);
 
     this.loaded = true;
 
@@ -187,6 +192,20 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
     setTimeout(async () => {
       await this.reload();
     }, reloadInterval);
+  }
+
+  private validateRawValues(rawValues: UntypedConfig): void {
+    const [validatedValues, defaults] = parseConfig(this.schema, rawValues, this.options.strict);
+
+    this.rawValues = rawValues;
+    this.validatedValues = validatedValues;
+    this.valueOrigins = recordOriginDefaults(this.valueOrigins, defaults, 'default');
+
+    if (this.options.printConfig) {
+      printConfig(this.getRedactedConfig(), this.valueOrigins);
+    }
+
+    debug('load validated values', this.validatedValues);
   }
 
   private async loadConfigFile(filename: string): Promise<UntypedConfig> {
@@ -252,21 +271,27 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
     }
   }
 
+  private async loadPluginConfig(plugin: any): Promise<UntypedConfig> {
+    const pluginReturnValue: ConfigDugPluginOutput = await plugin.load();
+
+    this.valueOrigins = mergeOrigins(this.valueOrigins, pluginReturnValue.valueOrigins);
+
+    if (pluginReturnValue.nextReloadIn) {
+      setTimeout(async () => {
+        await this.reloadPluginConfig(plugin);
+      }, pluginReturnValue.nextReloadIn);
+    }
+
+    return pluginReturnValue.values;
+  }
+
   private async loadPlugins(): Promise<UntypedConfig> {
     let values: UntypedConfig = {};
 
     for (const plugin of this.options.plugins) {
-      const pluginReturnValue: ConfigDugPluginOutput = await plugin.load();
+      const pluginRawValues = await this.loadPluginConfig(plugin);
 
-      values = { ...values, ...pluginReturnValue.values };
-
-      this.valueOrigins = mergeOrigins(this.valueOrigins, pluginReturnValue.valueOrigins);
-
-      if (pluginReturnValue.nextReloadIn) {
-        this.reloadTimeout = setTimeout(async () => {
-          await this.reload();
-        }, pluginReturnValue.nextReloadIn);
-      }
+      values = { ...values, ...pluginRawValues };
     }
 
     debug('plugin values', values);
