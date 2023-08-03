@@ -11,7 +11,7 @@ const awsSecretsManagerPlugin = new AWSSecretsManagerPlugin({
     {
       name: 'config-dug-test/config',
       region: 'ca-central-1',
-      reloadInterval: '1m',
+      reloadInterval: '8s',
     },
   ],
 });
@@ -24,6 +24,10 @@ configDug.on('config-loaded', (config) => {
 
 configDug.on('config-reloaded', (config) => {
   console.log('config-reloaded event received', config);
+});
+
+configDug.on('plugin-config-reloaded', (config) => {
+  console.log('plugin-config-reloaded event received', config);
 });
 
 await configDug.load();
