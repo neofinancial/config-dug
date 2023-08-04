@@ -159,7 +159,7 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
 
     const pluginRawValues = await this.loadPluginConfig(plugin);
 
-    this.validateRawValues({ ...this.validateRawValues, ...pluginRawValues });
+    this.validateRawValues({ ...this.rawValues, ...pluginRawValues });
 
     this.emit('plugin-config-reloaded', this.validatedValues);
   }
