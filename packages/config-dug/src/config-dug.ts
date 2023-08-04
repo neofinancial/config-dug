@@ -65,7 +65,6 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
   private validatedValues: ConfigDugConfig<T> | undefined;
   private valueOrigins: ValueOrigins = {};
   private reloadTimeout?: NodeJS.Timeout;
-  private pluginsInitialized = false;
   private loaded = false;
 
   constructor(schema: T, options?: ConfigDugOptions) {
@@ -131,6 +130,8 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
       return Promise.resolve();
     }
 
+    await this.initializePlugins();
+
     await this.loadConfig();
 
     this.emit('config-loaded', this.validatedValues);
@@ -167,11 +168,6 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
   private async loadConfig(): Promise<void> {
     const environmentName = getEnvironmentName(this.options.envKey);
 
-    if (!this.pluginsInitialized) {
-      await this.initializePlugins();
-      this.pluginsInitialized = true;
-    }
-
     const rawValues = {
       ...(await this.loadConfigFile('config.default')),
       ...(await this.loadConfigFile(`config.${environmentName}`)),
@@ -199,10 +195,13 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
 
     this.rawValues = rawValues;
     this.validatedValues = validatedValues;
-    this.valueOrigins = recordOriginDefaults(this.valueOrigins, defaults, 'default');
 
-    if (this.options.printConfig) {
-      printConfig(this.getRedactedConfig(), this.valueOrigins);
+    if (!this.loaded) {
+      this.valueOrigins = recordOriginDefaults(this.valueOrigins, defaults, 'default');
+
+      if (this.options.printConfig) {
+        printConfig(this.getRedactedConfig(), this.valueOrigins);
+      }
     }
 
     debug('load validated values', this.validatedValues);
