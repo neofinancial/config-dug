@@ -273,10 +273,10 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
 
     this.valueOrigins = mergeOrigins(this.valueOrigins, pluginOutput.valueOrigins);
 
-    const reloadInternalMs = ms(this.options.reloadInterval);
+    const reloadIntervalMs = ms(this.options.reloadInterval);
     const pluginNextReloadIn = pluginOutput.nextReloadIn;
 
-    if (pluginNextReloadIn && pluginNextReloadIn < reloadInternalMs) {
+    if (pluginNextReloadIn && pluginNextReloadIn < reloadIntervalMs) {
       setTimeout(async () => {
         await this.reloadPluginConfig(plugin);
       }, pluginNextReloadIn);
