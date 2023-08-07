@@ -183,11 +183,9 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
 
     this.loaded = true;
 
-    const reloadInterval = ms(this.options.reloadInterval);
-
     setTimeout(async () => {
       await this.reload();
-    }, reloadInterval);
+    }, ms(this.options.reloadInterval));
   }
 
   private validateRawValues(rawValues: UntypedConfig): void {
@@ -275,7 +273,9 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
 
     this.valueOrigins = mergeOrigins(this.valueOrigins, pluginReturnValue.valueOrigins);
 
-    if (pluginReturnValue.nextReloadIn) {
+    const reloadInternalMs = ms(this.options.reloadInterval);
+
+    if (pluginReturnValue.nextReloadIn && pluginReturnValue.nextReloadIn < reloadInternalMs) {
       setTimeout(async () => {
         await this.reloadPluginConfig(plugin);
       }, pluginReturnValue.nextReloadIn);
