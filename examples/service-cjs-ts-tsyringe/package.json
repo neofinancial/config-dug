@@ -6,7 +6,7 @@
   "license": "UNLICENSED",
   "private": true,
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "scripts": {
     "start": "APP_ENV=development ts-node src/index.ts",
@@ -17,7 +17,7 @@
     "config-dug": "^2.0.0"
   },
   "devDependencies": {
-    "@tsconfig/node16": "^1.0.3",
+    "@tsconfig/node18": "^1.0.3",
     "@types/node": "^18.15.11",
     "reflect-metadata": "^0.2.1",
     "ts-node": "^10.9.1",
