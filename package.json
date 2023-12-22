@@ -10,7 +10,7 @@
     "url": "https://github.com/neofinancial/config-dug.git"
   },
   "engines": {
-    "node": ">=16.0.0",
+    "node": ">=18.0.0",
     "npm": ">=9.0.0"
   },
   "workspaces": [

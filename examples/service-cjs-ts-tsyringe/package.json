@@ -1,28 +1,27 @@
 {
-  "name": "@config-dug/service-esm-ts",
+  "name": "@config-dug/service-cjs-ts-tsyringe",
   "version": "1.0.0",
-  "description": "TypeScript ESM test service for Config Dug",
+  "description": "TypeScript CJS test service for Config Dug with TSyringe",
   "author": "Ian Sutherland",
   "license": "UNLICENSED",
   "private": true,
-  "type": "module",
   "engines": {
     "node": ">=18.0.0"
   },
   "scripts": {
-    "start": "APP_ENV=development node --loader ts-node/esm --no-warnings src/index.ts",
-    "start:debug": "DEBUG=config-dug* APP_ENV=development node --loader ts-node/esm --no-warnings src/index.ts"
+    "start": "APP_ENV=development ts-node src/index.ts",
+    "start:debug": "DEBUG=config-dug* APP_ENV=development ts-node src/index.ts"
   },
   "dependencies": {
     "@config-dug/plugin-aws-secrets-manager": "^1.0.0",
     "config-dug": "^2.0.0"
   },
   "devDependencies": {
-    "@swc/core": "^1.3.50",
-    "@swc/helpers": "^0.5.0",
     "@tsconfig/node18": "^1.0.3",
     "@types/node": "^18.15.11",
+    "reflect-metadata": "^0.2.1",
     "ts-node": "^10.9.1",
+    "tsyringe": "^4.8.0",
     "typescript": "^4.9.5"
   }
 }

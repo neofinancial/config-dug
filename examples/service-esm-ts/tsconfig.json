@@ -1,5 +1,5 @@
 {
-  "extends": "@tsconfig/node16",
+  "extends": "@tsconfig/node18",
   "ts-node": {
     "swc": true,
     "esm": true

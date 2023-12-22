@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "author": "Ian Sutherland <ian@iansutherland.ca>",
   "license": "MIT",
-  "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "main": "./build/cjs/index.js",
   "module": "./build/esm/index.js",
   "types": "./build/types/index.d.ts",
@@ -35,7 +37,7 @@
     "config-dug": "^2.0.0"
   },
   "devDependencies": {
-    "@tsconfig/node16": "^1.0.3",
+    "@tsconfig/node18": "^1.0.3",
     "@types/debug": "^4.1.7",
     "@types/node": "^18.11.18",
     "config-dug": "^2.0.0",

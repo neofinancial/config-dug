@@ -10,6 +10,9 @@
     "url": "https://github.com/neofinancial/config-dug.git",
     "directory": "packages/config-dug"
   },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "main": "./build/cjs/index.js",
   "module": "./build/esm/index.js",
   "types": "./build/types/index.d.ts",
@@ -39,7 +42,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@tsconfig/node16": "^1.0.3",
+    "@tsconfig/node18": "^1.0.3",
     "@types/debug": "^4.1.7",
     "@types/node": "^18.11.18",
     "typescript": "^5.0.4"
