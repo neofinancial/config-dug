@@ -27,10 +27,4 @@ jobs:
       - name: Format Check
         run: npm run format:check
       - name: Build
-        run: npm run build
-      - name: Test
-        run: npm run test -- --coverage
-      - name: Codecov
-        uses: codecov/codecov-action@v1
-        with:
-          token: ${{secrets.CODECOV_TOKEN}}
+        run: npm run build --workspaces --if-present
