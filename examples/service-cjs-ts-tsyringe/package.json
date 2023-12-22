@@ -1,0 +1,27 @@
+{
+  "name": "@config-dug/service-cjs-ts-tsyringe",
+  "version": "1.0.0",
+  "description": "TypeScript CJS test service for Config Dug with TSyringe",
+  "author": "Ian Sutherland",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "scripts": {
+    "start": "APP_ENV=development ts-node src/index.ts",
+    "start:debug": "DEBUG=config-dug* APP_ENV=development ts-node src/index.ts"
+  },
+  "dependencies": {
+    "@config-dug/plugin-aws-secrets-manager": "^1.0.0",
+    "config-dug": "^2.0.0"
+  },
+  "devDependencies": {
+    "@tsconfig/node16": "^1.0.3",
+    "@types/node": "^18.15.11",
+    "reflect-metadata": "^0.2.1",
+    "ts-node": "^10.9.1",
+    "tsyringe": "^4.8.0",
+    "typescript": "^4.9.5"
+  }
+}
