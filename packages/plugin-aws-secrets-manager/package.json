@@ -24,6 +24,13 @@
     },
     "./package.json": "./package.json"
   },
+  "files": [
+    "build",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc -b tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json",
     "watch": "tsc -b tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json --watch",
