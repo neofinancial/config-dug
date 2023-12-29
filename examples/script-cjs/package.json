@@ -2,8 +2,8 @@
   "name": "@config-dug/script-cjs",
   "version": "1.0.0",
   "description": "CJS test script for Config Dug",
-  "author": "Ian Sutherland",
-  "license": "UNLICENSED",
+  "author": "Neo Financial Engineering <engineering@neofinancial.com>",
+  "license": "MIT",
   "private": true,
   "engines": {
     "node": ">=18.0.0"

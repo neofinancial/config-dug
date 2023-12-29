@@ -1,7 +1,7 @@
 {
   "name": "@config-dug/plugin-aws-secrets-manager",
   "version": "1.0.0-alpha.0",
-  "author": "Ian Sutherland <ian@iansutherland.ca>",
+  "author": "Neo Financial Engineering <engineering@neofinancial.com>",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"
@@ -34,7 +34,8 @@
   "scripts": {
     "build": "tsc -b tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json",
     "watch": "tsc -b tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json --watch",
-    "clean": "rimraf build"
+    "clean": "rimraf build",
+    "prepublishOnly": "npm run clean && npm run build"
   },
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.350.0",
