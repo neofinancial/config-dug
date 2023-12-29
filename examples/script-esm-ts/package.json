@@ -2,8 +2,8 @@
   "name": "@config-dug/script-esm-ts",
   "version": "1.0.0",
   "description": "Test project for config-dug",
-  "author": "Ian Sutherland",
-  "license": "UNLICENSED",
+  "author": "Neo Financial Engineering <engineering@neofinancial.com>",
+  "license": "MIT",
   "private": true,
   "type": "module",
   "engines": {

@@ -40,7 +40,8 @@
   "scripts": {
     "build": "tsc -b tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json",
     "watch": "tsc -b tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json --watch",
-    "clean": "rimraf build"
+    "clean": "rimraf build",
+    "prepublishOnly": "npm run clean && npm run build"
   },
   "dependencies": {
     "chalk": "^4.1.2",

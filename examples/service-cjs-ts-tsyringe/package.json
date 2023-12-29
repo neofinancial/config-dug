@@ -2,8 +2,8 @@
   "name": "@config-dug/service-cjs-ts-tsyringe",
   "version": "1.0.0",
   "description": "TypeScript CJS test service for Config Dug with TSyringe",
-  "author": "Ian Sutherland",
-  "license": "UNLICENSED",
+  "author": "Neo Financial Engineering <engineering@neofinancial.com>",
+  "license": "MIT",
   "private": true,
   "engines": {
     "node": ">=18.0.0"
