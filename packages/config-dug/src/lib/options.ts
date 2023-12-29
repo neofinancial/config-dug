@@ -23,7 +23,7 @@ const optionsWithDefaultsSchema = z.object({
   loadConfigFiles: z.boolean().default(true),
   loadEnvironment: z.boolean().default(true),
   plugins: z.array(z.any()).default([]),
-  printConfig: z.boolean().default(true),
+  printConfig: z.boolean().default(false),
   strict: z.boolean().default(false),
   warnOnLocalConfigFile: z.boolean().default(true),
 });

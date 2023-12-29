@@ -87,7 +87,7 @@ export { getConfig };
 | `loadConfigFiles` | `boolean` | `true` | Load config values from `config.*.{js|cjs|mjs}` files |
 | `loadEnvironment` | `boolean` | `true` | Load config values from the environment |
 | `plugins` | | `[]` | An array of plugins to load. Plugins are evaluated in order so config values that come from a plugin that is specified later will override config values from plugins specified earlier |
-| `printConfig` | `boolean` | `true` | Print the resolved config when loaded |
+| `printConfig` | `boolean` | `false` | Print the resolved config when loaded |
 | `strict` | `boolean` | `false` | When `false` config values are preprocessed first to coerce them to the specified type |
 | `warnOnLocalConfigFile` | `boolean` | `true` | Print a warning when a local config file `config.*.local.{js|cjs|mjs}` is loaded |
 
