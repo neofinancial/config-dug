@@ -1,0 +1,57 @@
+{
+  "name": "config-dug",
+  "version": "2.0.0-alpha.0",
+  "description": "Config management library for Node.js with support for multiple environments, config files, environment variables and plugins",
+  "author": "Neo Financial Engineering <engineering@neofinancial.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/neofinancial/config-dug/tree/main/packages/config-dug#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/neofinancial/config-dug.git",
+    "directory": "packages/config-dug"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "main": "./build/cjs/index.js",
+  "module": "./build/esm/index.js",
+  "types": "./build/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/types/index.d.ts",
+      "require": "./build/cjs/index.js",
+      "import": "./build/esm/index.js",
+      "default": "./build/cjs/index.js"
+    },
+    "./*": {
+      "types": "./build/types/*.d.ts",
+      "require": "./build/cjs/*.js",
+      "import": "./build/esm/*.js",
+      "default": "./build/cjs/*.js"
+    }
+  },
+  "files": [
+    "build",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json",
+    "watch": "tsc -b tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json --watch",
+    "clean": "rimraf build"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "change-case": "^4.1.2",
+    "debug": "^4.3.4",
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@tsconfig/node18": "^1.0.3",
+    "@types/debug": "^4.1.7",
+    "@types/node": "^18.11.18",
+    "typescript": "^5.0.4"
+  }
+}

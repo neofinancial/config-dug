@@ -1,0 +1,19 @@
+{
+  "name": "@config-dug/script-cjs",
+  "version": "1.0.0",
+  "description": "CJS test script for Config Dug",
+  "author": "Ian Sutherland",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "DEBUG=config-dug* APP_ENV=development node index.js",
+    "start:staging": "DEBUG=config-dug* APP_ENV=staging node index.js",
+    "start:production": "DEBUG=config-dug* APP_ENV=production node index.js"
+  },
+  "dependencies": {
+    "config-dug": "^2.0.0-alpha.0"
+  }
+}

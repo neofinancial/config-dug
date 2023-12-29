@@ -1,0 +1,12 @@
+{
+  "extends": "@tsconfig/node18",
+  "compilerOptions": {
+    "moduleResolution": "node16",
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "build/esm"
+  },
+  "include": ["src/**/*"]
+}
