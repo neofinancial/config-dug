@@ -13,8 +13,8 @@
     "start:debug": "DEBUG=config-dug* APP_ENV=development ts-node src/index.ts"
   },
   "dependencies": {
-    "@config-dug/plugin-aws-secrets-manager": "^1.0.0",
-    "config-dug": "^2.0.0"
+    "@config-dug/plugin-aws-secrets-manager": "^1.0.0-alpha.0",
+    "config-dug": "^2.0.0-alpha.0"
   },
   "devDependencies": {
     "@tsconfig/node18": "^1.0.3",

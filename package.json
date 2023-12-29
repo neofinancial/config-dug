@@ -4,6 +4,7 @@
   "description": "Config management library for Node.js with support for multiple environments, config files, environment variables and plugins",
   "author": "Neo Financial Engineering <engineering@neofinancial.com>",
   "license": "MIT",
+  "private": true,
   "homepage": "https://github.com/neofinancial/config-dug",
   "repository": {
     "type": "git",
@@ -18,6 +19,7 @@
     "packages/*"
   ],
   "scripts": {
+    "build": "npm run build --workspace=config-dug --workspace=@config-dug/plugin-aws-secrets-manager",
     "clean": "rimraf packages/*/build",
     "clean:modules": "rimraf node_modules examples/*/node_modules packages/*/node_modules",
     "format": "prettier --write \"**/*.{ts,js,cjs,mjs,json,md}\"",

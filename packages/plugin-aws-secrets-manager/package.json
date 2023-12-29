@@ -1,6 +1,6 @@
 {
   "name": "@config-dug/plugin-aws-secrets-manager",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha.0",
   "author": "Ian Sutherland <ian@iansutherland.ca>",
   "license": "MIT",
   "engines": {
@@ -34,13 +34,13 @@
     "ms": "^2.1.3"
   },
   "peerDependencies": {
-    "config-dug": "^2.0.0"
+    "config-dug": "^2.0.0-alpha.0"
   },
   "devDependencies": {
     "@tsconfig/node18": "^1.0.3",
     "@types/debug": "^4.1.7",
     "@types/node": "^18.11.18",
-    "config-dug": "^2.0.0",
+    "config-dug": "^2.0.0-alpha.0",
     "debug": "^4.3.4",
     "typescript": "^5.0.4"
   }

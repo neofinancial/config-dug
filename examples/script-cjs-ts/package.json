@@ -14,7 +14,7 @@
     "start:production": "DEBUG=config-dug* APP_ENV=production ts-node index.ts"
   },
   "dependencies": {
-    "config-dug": "^2.0.0"
+    "config-dug": "^2.0.0-alpha.0"
   },
   "devDependencies": {
     "@tsconfig/node18": "^1.0.3",

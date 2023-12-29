@@ -14,6 +14,6 @@
     "start:production": "DEBUG=config-dug* APP_ENV=production node index.js"
   },
   "dependencies": {
-    "config-dug": "^2.0.0"
+    "config-dug": "^2.0.0-alpha.0"
   }
 }
