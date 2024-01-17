@@ -276,8 +276,6 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
     return values;
   }
 
-  private getReloadInterval;
-
   private notLoadedError(): Error {
     return new ConfigDugError('Config values have not been loaded. You must call `load()` first.');
   }
