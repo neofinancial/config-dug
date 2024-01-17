@@ -9,6 +9,9 @@ const optionsSchema = z
     envKey: z.string().optional(),
     loadConfigFiles: z.boolean().optional(),
     loadEnvironment: z.boolean().optional(),
+    reloadInterval: z.number().optional(),
+    minReloadInterval: z.number().optional(),
+
     // TODO: Add plugin types
     plugins: z.array(z.any()).optional(),
     printConfig: z.boolean().optional(),
@@ -25,6 +28,8 @@ const optionsWithDefaultsSchema = z.object({
   plugins: z.array(z.any()).default([]),
   printConfig: z.boolean().default(false),
   strict: z.boolean().default(false),
+  minReloadInterval: z.number().default(10000),
+  reloadInterval: z.number().default(30000),
   warnOnLocalConfigFile: z.boolean().default(true),
 });
 
