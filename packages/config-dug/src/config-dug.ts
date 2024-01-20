@@ -248,6 +248,7 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
     let values: UntypedConfig = {};
 
     const { minReloadInterval, reloadInterval } = this.options;
+
     let nextReloadIn: number = reloadInterval;
 
     for (const plugin of this.options.plugins) {
