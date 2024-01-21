@@ -3,6 +3,7 @@
   "version": "1.0.0-alpha.0",
   "author": "Neo Financial Engineering <engineering@neofinancial.com>",
   "license": "MIT",
+  "type": "module",
   "engines": {
     "node": ">=18.0.0"
   },
