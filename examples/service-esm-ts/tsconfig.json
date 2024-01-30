@@ -4,5 +4,8 @@
     "swc": true,
     "esm": true
   },
+  "compilerOptions": {
+    "module": "ES2022"
+  },
   "include": ["./src/**/*"]
 }

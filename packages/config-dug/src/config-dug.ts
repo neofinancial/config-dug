@@ -63,7 +63,6 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
   private rawValues: UntypedConfig = {};
   private validatedValues: ConfigDugConfig<T> | undefined;
   private valueOrigins: ValueOrigins = {};
-  private reloadTimeout?: NodeJS.Timeout;
   private pluginsInitialized = false;
   private loaded = false;
 
@@ -156,11 +155,13 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
       this.pluginsInitialized = true;
     }
 
+    const { values: pluginValues, nextReloadIn } = await this.loadPlugins();
+
     this.valueOrigins = {};
     this.rawValues = {
       ...(await this.loadConfigFile('config.default')),
       ...(await this.loadConfigFile(`config.${environmentName}`)),
-      ...(await this.loadPlugins()),
+      ...pluginValues,
       ...(await this.loadLocalConfigFile(`config.${environmentName}.local`)),
       ...(await this.loadLocalConfigFile('config.local')),
       ...this.loadEnvironment(Object.keys(this.schema)),
@@ -179,7 +180,20 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
 
     debug('load validated values', this.validatedValues);
 
+    this.setReloadInterval(nextReloadIn);
+
     this.loaded = true;
+  }
+
+  private setReloadInterval(nextReloadIn: number): void {
+    const { minReloadInterval } = this.options;
+
+    setTimeout(
+      async () => {
+        await this.reload();
+      },
+      nextReloadIn >= minReloadInterval ? nextReloadIn : minReloadInterval
+    );
   }
 
   private async loadConfigFile(filename: string): Promise<UntypedConfig> {
@@ -245,8 +259,9 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
     }
   }
 
-  private async loadPlugins(): Promise<UntypedConfig> {
+  private async loadPlugins(): Promise<{ values: UntypedConfig; nextReloadIn: number }> {
     let values: UntypedConfig = {};
+    let nextReloadIn: number = this.options.reloadInterval;
 
     for (const plugin of this.options.plugins) {
       const pluginReturnValue: ConfigDugPluginOutput = await plugin.load();
@@ -255,16 +270,16 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
 
       this.valueOrigins = mergeOrigins(this.valueOrigins, pluginReturnValue.valueOrigins);
 
-      if (pluginReturnValue.nextReloadIn) {
-        this.reloadTimeout = setTimeout(async () => {
-          await this.reload();
-        }, pluginReturnValue.nextReloadIn);
+      const pluginNextReloadIn = pluginReturnValue.nextReloadIn;
+
+      if (pluginNextReloadIn && pluginNextReloadIn < nextReloadIn) {
+        nextReloadIn = pluginNextReloadIn;
       }
     }
 
     debug('plugin values', values);
 
-    return values;
+    return { values, nextReloadIn };
   }
 
   private notLoadedError(): Error {
