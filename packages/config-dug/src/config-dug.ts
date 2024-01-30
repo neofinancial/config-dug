@@ -155,11 +155,13 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
       this.pluginsInitialized = true;
     }
 
+    const { values: pluginValues, nextReloadIn } = await this.loadPlugins();
+
     this.valueOrigins = {};
     this.rawValues = {
       ...(await this.loadConfigFile('config.default')),
       ...(await this.loadConfigFile(`config.${environmentName}`)),
-      ...(await this.loadPlugins()),
+      ...pluginValues,
       ...(await this.loadLocalConfigFile(`config.${environmentName}.local`)),
       ...(await this.loadLocalConfigFile('config.local')),
       ...this.loadEnvironment(Object.keys(this.schema)),
@@ -178,7 +180,20 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
 
     debug('load validated values', this.validatedValues);
 
+    this.setReloadInterval(nextReloadIn);
+
     this.loaded = true;
+  }
+
+  private setReloadInterval(nextReloadIn: number): void {
+    const { minReloadInterval } = this.options;
+
+    setTimeout(
+      async () => {
+        await this.reload();
+      },
+      nextReloadIn >= minReloadInterval ? nextReloadIn : minReloadInterval
+    );
   }
 
   private async loadConfigFile(filename: string): Promise<UntypedConfig> {
@@ -244,12 +259,9 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
     }
   }
 
-  private async loadPlugins(): Promise<UntypedConfig> {
+  private async loadPlugins(): Promise<{ values: UntypedConfig; nextReloadIn: number }> {
     let values: UntypedConfig = {};
-
-    const { minReloadInterval, reloadInterval } = this.options;
-
-    let nextReloadIn: number = reloadInterval;
+    let nextReloadIn: number = this.options.reloadInterval;
 
     for (const plugin of this.options.plugins) {
       const pluginReturnValue: ConfigDugPluginOutput = await plugin.load();
@@ -265,16 +277,9 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
       }
     }
 
-    setTimeout(
-      async () => {
-        await this.reload();
-      },
-      nextReloadIn >= minReloadInterval ? nextReloadIn : minReloadInterval
-    );
-
     debug('plugin values', values);
 
-    return values;
+    return { values, nextReloadIn };
   }
 
   private notLoadedError(): Error {
