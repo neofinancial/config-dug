@@ -1,6 +1,6 @@
 {
   "name": "config-dug",
-  "version": "2.0.1",
+  "version": "2.0.0",
   "description": "Config management library for Node.js with support for multiple environments, config files, environment variables and plugins",
   "author": "Neo Financial Engineering <engineering@neofinancial.com>",
   "license": "MIT",
