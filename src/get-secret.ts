@@ -1,12 +1,12 @@
 /* eslint-disable no-console */
 
-import awsParamStore from 'aws-param-store';
+import { getParameterSync } from './get-parameter-sync';
 
 import { SecretObject } from '.';
 
 const getSecret = (secretName: string, region: string, timeout: number): SecretObject => {
   try {
-    const secret = awsParamStore.getParameterSync(`/aws/reference/secretsmanager/${secretName}`, {
+    const secret = getParameterSync(`/aws/reference/secretsmanager/${secretName}`, {
       region,
       httpOptions: {
         timeout,
