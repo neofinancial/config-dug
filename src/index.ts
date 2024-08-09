@@ -49,7 +49,7 @@ const resolveFile = (appDirectory: string, configPath: string, fileName: string)
   } else {
     debug('unable to resolve config file', fileName);
 
-    return;
+    return '';
   }
 };
 
@@ -73,6 +73,8 @@ const loadFile = (filePath: string): Record<string, unknown> => {
       console.error(error);
     }
   }
+
+  return {};
 };
 
 const convertString = (value: string): string | number | boolean => {
@@ -157,7 +159,9 @@ const loadEnvironment = (): Record<string, unknown> => {
 
   // eslint-disable-next-line unicorn/no-reduce
   return Object.entries(process.env).reduce((result: ConfigObject, [key, value]): ConfigObject => {
-    result[key] = convertString(value);
+    if (value) {
+      result[key] = convertString(value);
+    }
 
     return result;
   }, {});
