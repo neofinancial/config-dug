@@ -13,10 +13,10 @@ jobs:
     timeout-minutes: 20
     strategy:
       matrix:
-        node: [10, 12, 14, 16]
+        node: [18, 20, 22]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
           cache: 'npm'
