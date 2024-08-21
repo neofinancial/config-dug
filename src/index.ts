@@ -1,4 +1,7 @@
+/* eslint-disable unicorn/no-array-reduce */
 /* eslint-disable unicorn/no-nested-ternary */
+/* eslint-disable unicorn/prefer-logical-operator-over-ternary */
+/* eslint-disable curly */
 /* eslint-disable no-console */
 
 import fs from 'fs';
@@ -34,7 +37,7 @@ const resolveFile = (appDirectory: string, configPath: string, fileName: string)
     debug(
       'resolved config file',
       fileName,
-      path.resolve(appDirectory, configPath, `${fileName}.ts`)
+      path.resolve(appDirectory, configPath, `${fileName}.ts`),
     );
 
     return path.resolve(appDirectory, configPath, `${fileName}.ts`);
@@ -42,7 +45,7 @@ const resolveFile = (appDirectory: string, configPath: string, fileName: string)
     debug(
       'resolved config file',
       fileName,
-      path.resolve(appDirectory, configPath, `${fileName}.js`)
+      path.resolve(appDirectory, configPath, `${fileName}.js`),
     );
 
     return path.resolve(appDirectory, configPath, `${fileName}.js`);
@@ -61,7 +64,7 @@ const loadFile = (filePath: string): Record<string, unknown> => {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
       const config = require(filePath);
 
-      if (filePath.match(/config.+local/)) {
+      if (/config.+local/.test(filePath)) {
         const fileName = filePath.split('/').pop();
 
         console.log(`WARNING: Found a local config file ${fileName}`);
@@ -80,8 +83,8 @@ const loadFile = (filePath: string): Record<string, unknown> => {
 const convertString = (value: string): string | number | boolean => {
   if (value.toLowerCase() === 'true') return true;
   if (value.toLowerCase() === 'false') return false;
-  if (value.match(/^\d+\.\d+$/)) return Number.parseFloat(value);
-  if (value.match(/^\d+$/)) return Number.parseInt(value, 10);
+  if (/^\d+\.\d+$/.test(value)) return Number.parseFloat(value);
+  if (/^\d+$/.test(value)) return Number.parseInt(value, 10);
 
   return value;
 };
@@ -95,7 +98,7 @@ const convertToArray = (value: string): string[] => {
 
 const loadSecrets = (
   config: LoadSecretsArgs,
-  overrides: LoadSecretsArgs
+  overrides: LoadSecretsArgs,
 ): Record<string, unknown> => {
   const secretNames =
     overrides.AWS_SECRETS_MANAGER_NAMES ||
@@ -150,7 +153,7 @@ const loadSecrets = (
 
       return result;
     },
-    {}
+    {},
   );
 };
 
@@ -172,17 +175,17 @@ const loadConfig = (configPath = ''): ConfigObject => {
   const environment = process.env.APP_ENV
     ? process.env.APP_ENV
     : process.env.NODE_ENV
-    ? process.env.NODE_ENV
-    : 'development';
+      ? process.env.NODE_ENV
+      : 'development';
 
   debug('loading config from', path.resolve(appDirectory, configPath));
 
   const defaultConfig = loadFile(resolveFile(appDirectory, configPath, 'config.default'));
   const environmentConfig = loadFile(
-    resolveFile(appDirectory, configPath, `config.${environment}`)
+    resolveFile(appDirectory, configPath, `config.${environment}`),
   );
   const localEnvironmentConfig = loadFile(
-    resolveFile(appDirectory, configPath, `config.${environment}.local`)
+    resolveFile(appDirectory, configPath, `config.${environment}.local`),
   );
   const localConfig = loadFile(resolveFile(appDirectory, configPath, 'config.local'));
   const fileConfig = Object.assign(
@@ -190,7 +193,7 @@ const loadConfig = (configPath = ''): ConfigObject => {
     defaultConfig,
     environmentConfig,
     localEnvironmentConfig,
-    localConfig
+    localConfig,
   );
 
   const environmentVars = loadEnvironment();
@@ -199,7 +202,7 @@ const loadConfig = (configPath = ''): ConfigObject => {
     {},
     fileConfig,
     loadSecrets(fileConfig, environmentVars),
-    environmentVars
+    environmentVars,
   );
 
   if (environment === 'test' || environment === 'development') {
