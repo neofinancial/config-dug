@@ -1,5 +1,5 @@
 import { ConfigDugSchema, UntypedConfig, ValueOrigins } from '../config-dug.js';
-import { ConfigDugOptions } from './options.js';
+import { ConfigDugOptionsWithDefaults } from './options.js';
 
 export type ConfigDugPluginOutput = {
   schema?: ConfigDugSchema;
@@ -9,6 +9,6 @@ export type ConfigDugPluginOutput = {
 };
 
 export interface ConfigDugPlugin {
-  initialize?: (configDugOptions: ConfigDugOptions) => Promise<void>;
+  initialize?: (configDugOptions: ConfigDugOptionsWithDefaults) => Promise<void>;
   load?: () => Promise<ConfigDugPluginOutput>;
 }

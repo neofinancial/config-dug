@@ -15,6 +15,20 @@ Config management library for Node.js with support for multiple environments, co
 
 - [@config-dug/plugin-aws-secrets-manager](./packages/plugin-aws-secrets-manager): [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/) plugin
 
+#### Plugin Lifecycle
+
+1. `initialize?: (configDugOptions: ConfigDugOptions) => Promise<void>;`
+1. NOT IMPLEMENTED: `onBeforeLoadConfigFiles?: (schema, values) => Promise<ConfigDugPluginOutput>;`
+1. NOT IMPLEMENTED: `onAfterLoadConfigFiles?: (schema, values) => Promise<ConfigDugPluginOutput>;`
+1. NOT IMPLEMENTED: `onBeforeLoadPlugins?: (schema, values) => Promise<ConfigDugPluginOutput>;`
+1. `load?: () => Promise<ConfigDugPluginOutput>;`
+1. NOT IMPLEMENTED: `reload?: () => Promise<ConfigDugPluginOutput>;`
+1. NOT IMPLEMENTED: `onAfterLoadPlugins?: (schema, values) => Promise<ConfigDugPluginOutput>;`
+1. NOT IMPLEMENTED: `onBeforeLoadLocalConfigFiles?: (schema, values) => Promise<ConfigDugPluginOutput>;`
+1. NOT IMPLEMENTED: `onAfterLoadLocalConfigFiles?: (schema, values) => Promise<ConfigDugPluginOutput>;`
+1. NOT IMPLEMENTED: `onBeforeLoadEnvironment?: (schema, values) => Promise<ConfigDugPluginOutput>;`
+1. NOT IMPLEMENTED: `onAfterLoadEnvironment?: (schema, values) => Promise<ConfigDugPluginOutput>;`
+
 ## Examples
 
 - [@config-dug/script-cjs](./examples/script-cjs): CJS test script

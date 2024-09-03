@@ -1,0 +1,12 @@
+{
+  "extends": "@tsconfig/node18",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
+  },
+  "ts-node": {
+    "swc": true,
+    "esm": true
+  },
+  "include": ["./**/*"]
+}

@@ -31,7 +31,7 @@ const debug = createDebug('config-dug:plugin:aws-secrets-manager');
 class AWSSecretsManagerPlugin implements ConfigDugPlugin {
   private secrets: AWSSecretsManagerPluginSecret[] = [];
   private pluginOptions: AWSSecretsManagerPluginOptions;
-  private configDugOptions: ConfigDugOptions = {};
+  // private configDugOptions: ConfigDugOptions = {};
   private valueOrigins: Record<string, string[]> = {};
   private initialized: boolean = false;
 
@@ -40,7 +40,7 @@ class AWSSecretsManagerPlugin implements ConfigDugPlugin {
   }
 
   public initialize = async (configDugOptions: ConfigDugOptions): Promise<void> => {
-    this.configDugOptions = configDugOptions;
+    // this.configDugOptions = configDugOptions;
     this.secrets = this.createSecrets();
 
     this.initialized = true;
