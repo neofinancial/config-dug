@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.8.0 (August 21, 2024)
+
+- Upgrade to aws-sdk v3
+- Update dependencies
+- Increase minimum Node version to 18 (current oldest LTS version)
+
 ## 1.7.2 (March 23, 2022)
 
 - Add a warning when a local config file is found

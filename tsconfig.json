@@ -1,17 +1,14 @@
 {
+  "extends": "@tsconfig/node18",
   "compilerOptions": {
-    "module": "commonjs",
-    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "target": "es6",
-    "noImplicitAny": true,
-    "moduleResolution": "node",
+    "useUnknownInCatchVariables": false,
     "outDir": "build",
     "baseUrl": "src",
     "paths": {
       "*": ["node_modules/*", "src/types/*"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "test/**/*"]
 }
