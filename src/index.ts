@@ -13,8 +13,11 @@ import { validateConfig } from './validate-config';
 
 const debug = createDebug('config-dug');
 
+type ConfigPrimitive = string | number | boolean;
+type ConfigValue = ConfigPrimitive | ConfigPrimitive[] | ConfigObject | ConfigObject[];
+
 export interface ConfigObject {
-  [key: string]: string | boolean | number;
+  [key: string]: ConfigValue;
 }
 
 interface LoadSecretsArgs {
@@ -29,7 +32,7 @@ interface LoadSecretsArgs {
 }
 
 export interface SecretObject {
-  [key: string]: string;
+  [key: string]: unknown;
 }
 
 const resolveFile = (appDirectory: string, configPath: string, fileName: string): string => {
@@ -80,11 +83,27 @@ const loadFile = (filePath: string): Record<string, unknown> => {
   return {};
 };
 
-const convertString = (value: string): string | number | boolean => {
-  if (value.toLowerCase() === 'true') return true;
-  if (value.toLowerCase() === 'false') return false;
-  if (/^\d+\.\d+$/.test(value)) return Number.parseFloat(value);
-  if (/^\d+$/.test(value)) return Number.parseInt(value, 10);
+const unwrapValue = (value: ConfigValue): ConfigValue => {
+  if (typeof value === 'string') {
+    if (value.toLowerCase() === 'true') return true;
+    if (value.toLowerCase() === 'false') return false;
+    if (/^\d+\.\d+$/.test(value)) return Number.parseFloat(value);
+    if (/^\d+$/.test(value)) return Number.parseInt(value, 10);
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((entry) => unwrapValue(entry)) as ConfigValue;
+  }
+
+  if (typeof value === 'object') {
+    const thing = Object.entries(value).reduce((result: ConfigObject, [key, entry]) => {
+      result[key] = unwrapValue(entry);
+
+      return result;
+    }, {});
+
+    return thing;
+  }
 
   return value;
 };
@@ -96,10 +115,7 @@ const convertToArray = (value: string): string[] => {
     .filter((entry) => !!entry);
 };
 
-const loadSecrets = (
-  config: LoadSecretsArgs,
-  overrides: LoadSecretsArgs,
-): Record<string, unknown> => {
+const loadSecrets = (config: LoadSecretsArgs, overrides: LoadSecretsArgs): ConfigValue => {
   const secretNames =
     overrides.AWS_SECRETS_MANAGER_NAMES ||
     config.AWS_SECRETS_MANAGER_NAMES ||
@@ -140,21 +156,13 @@ const loadSecrets = (
     return getSecret(name, region, timeout);
   });
 
-  const mergedSecrets: SecretObject = {};
+  const mergedSecrets: ConfigValue = {};
 
   secrets.forEach((secret) => {
     Object.assign(mergedSecrets, secret);
   });
 
-  // eslint-disable-next-line unicorn/no-reduce
-  return Object.entries(mergedSecrets).reduce(
-    (result: ConfigObject, [key, value]): ConfigObject => {
-      result[key] = convertString(value);
-
-      return result;
-    },
-    {},
-  );
+  return unwrapValue(mergedSecrets);
 };
 
 const loadEnvironment = (): Record<string, unknown> => {
@@ -163,7 +171,7 @@ const loadEnvironment = (): Record<string, unknown> => {
   // eslint-disable-next-line unicorn/no-reduce
   return Object.entries(process.env).reduce((result: ConfigObject, [key, value]): ConfigObject => {
     if (value) {
-      result[key] = convertString(value);
+      result[key] = unwrapValue(value);
     }
 
     return result;

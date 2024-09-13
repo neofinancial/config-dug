@@ -13,6 +13,12 @@ test('loading secrets from AWS Secrets Manager works', (): void => {
     TEST_INTEGER: 42,
     TEST_FLOAT: 4.2,
     TEST_NUMBER_LIST: '123456,123456',
+    TEST_NESTED: {
+      LEAF_1: 'LEAF_1',
+      NUMBERS: [1, 2, 3, 4, 5],
+      STRINGS: ['a', 'b', 'c'],
+      OBJECTS: [{ a: 1 }, { b: 2 }, { c: 3 }],
+    },
   });
 });
 
