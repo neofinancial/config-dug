@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.9.0 (September 13, 2024)
+
+- Enabled support for nested objects and arrays loaded from AWS Secrets
+
 ## 1.8.0 (August 21, 2024)
 
 - Upgrade to aws-sdk v3
