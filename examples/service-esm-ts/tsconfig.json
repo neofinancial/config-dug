@@ -1,8 +1,4 @@
 {
   "extends": "@tsconfig/node18",
-  "ts-node": {
-    "swc": true,
-    "esm": true
-  },
   "include": ["./src/**/*"]
 }

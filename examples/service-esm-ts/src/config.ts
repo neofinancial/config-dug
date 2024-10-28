@@ -1,22 +1,43 @@
 import { ConfigDug, z } from 'config-dug';
-import { AWSSecretsManagerPlugin } from '@config-dug/plugin-aws-secrets-manager';
+import { AWSParamStorePlugin } from '@config-dug/plugin-aws-param-store';
+// import { AWSSecretsManagerPlugin } from '@config-dug/plugin-aws-secrets-manager';
 
 const schema = {
   logLevel: z.string().default('info'),
-  API_TOKEN: z.string(),
+  tracingEnabled: z.boolean().default(false),
+  apiToken: {
+    schema: z.string(),
+    sensitive: true,
+    alternateKeys: ['api-token', 'API_TOKEN'],
+  },
 };
 
-const awsSecretsManagerPlugin = new AWSSecretsManagerPlugin({
-  secrets: [
+// const awsSecretsManagerPlugin = new AWSSecretsManagerPlugin({
+//   secrets: [
+//     {
+//       name: 'config-dug-test/config',
+//       region: 'ca-central-1',
+//       reloadInterval: '1m',
+//     },
+//   ],
+// });
+
+const awsParamStorePlugin = new AWSParamStorePlugin({
+  paths: [
     {
-      name: 'config-dug-test/config',
+      path: '/config-dug-test/config',
       region: 'ca-central-1',
       reloadInterval: '1m',
     },
   ],
+  sourceKeyStyle: 'kebab-case',
 });
 
-const configDug = new ConfigDug(schema, { plugins: [awsSecretsManagerPlugin] });
+const configDug = new ConfigDug(schema, {
+  plugins: [awsParamStorePlugin],
+  printConfig: true,
+  outputKeyStyle: 'camelCase',
+});
 
 configDug.on('config-loaded', (config) => {
   console.log('config-loaded event received', config);

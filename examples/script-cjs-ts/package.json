@@ -9,9 +9,9 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "start": "DEBUG=config-dug* APP_ENV=development ts-node index.ts",
-    "start:staging": "DEBUG=config-dug* APP_ENV=staging ts-node index.ts",
-    "start:production": "DEBUG=config-dug* APP_ENV=production ts-node index.ts"
+    "start": "DEBUG=config-dug* APP_ENV=development tsx index.ts",
+    "start:staging": "DEBUG=config-dug* APP_ENV=staging tsx index.ts",
+    "start:production": "DEBUG=config-dug* APP_ENV=production tsx index.ts"
   },
   "dependencies": {
     "config-dug": "^2.0.0-alpha.0"
@@ -19,7 +19,7 @@
   "devDependencies": {
     "@tsconfig/node18": "^1.0.3",
     "@types/node": "^18.11.18",
-    "ts-node": "^10.9.1",
+    "tsx": "^4.19.1",
     "typescript": "^4.9.4"
   }
 }

@@ -9,8 +9,8 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "start": "APP_ENV=development ts-node src/index.ts",
-    "start:debug": "DEBUG=config-dug* APP_ENV=development ts-node src/index.ts"
+    "start": "APP_ENV=development tsx src/index.ts",
+    "start:debug": "DEBUG=config-dug* APP_ENV=development tsx src/index.ts"
   },
   "dependencies": {
     "@config-dug/plugin-aws-secrets-manager": "^1.0.0-alpha.0",
@@ -20,7 +20,7 @@
     "@tsconfig/node18": "^1.0.3",
     "@types/node": "^18.15.11",
     "reflect-metadata": "^0.2.1",
-    "ts-node": "^10.9.1",
+    "tsx": "^4.19.1",
     "tsyringe": "^4.8.0",
     "typescript": "^4.9.5"
   }

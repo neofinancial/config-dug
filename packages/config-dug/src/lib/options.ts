@@ -7,6 +7,7 @@ const optionsSchema = z
   .object({
     basePath: z.string().optional(),
     envKey: z.string().optional(),
+    keyFormat: z.string().optional(),
     loadConfigFiles: z.boolean().optional(),
     loadEnvironment: z.boolean().optional(),
     // TODO: Add plugin types
@@ -20,6 +21,7 @@ const optionsSchema = z
 const optionsWithDefaultsSchema = z.object({
   basePath: z.string().default(process.cwd()),
   envKey: z.string().default('APP_ENV'),
+  keyFormat: z.string().default('camelCase'),
   loadConfigFiles: z.boolean().default(true),
   loadEnvironment: z.boolean().default(true),
   plugins: z.array(z.any()).default([]),

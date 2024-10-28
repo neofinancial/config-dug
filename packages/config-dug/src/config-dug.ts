@@ -249,6 +249,7 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
     let values: UntypedConfig = {};
 
     for (const plugin of this.options.plugins) {
+      // TODO: pass plugin options (ConfigDugOptions and maybe a keyTransformer function)
       const pluginReturnValue: ConfigDugPluginOutput = await plugin.load();
 
       values = { ...values, ...pluginReturnValue.values };

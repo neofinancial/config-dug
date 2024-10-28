@@ -10,9 +10,9 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "start": "DEBUG=config-dug* APP_ENV=development node --loader ts-node/esm --no-warnings index.ts",
-    "start:staging": "DEBUG=config-dug* APP_ENV=staging node --loader ts-node/esm --no-warnings index.ts",
-    "start:production": "DEBUG=config-dug* APP_ENV=production node --loader ts-node/esm --no-warnings index.ts"
+    "start": "DEBUG=config-dug* APP_ENV=development tsx index.ts",
+    "start:staging": "DEBUG=config-dug* APP_ENV=staging tsx index.ts",
+    "start:production": "DEBUG=config-dug* APP_ENV=production tsx index.ts"
   },
   "dependencies": {
     "config-dug": "^2.0.0-alpha.0"
@@ -22,7 +22,7 @@
     "@swc/helpers": "^0.5.0",
     "@tsconfig/node18": "^1.0.3",
     "@types/node": "^18.15.11",
-    "ts-node": "^10.9.1",
+    "tsx": "^4.19.1",
     "typescript": "^4.9.5"
   }
 }
