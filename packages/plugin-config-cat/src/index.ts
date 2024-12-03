@@ -1,7 +1,6 @@
-import { ConfigDugOptions, ConfigDugPlugin, ConfigDugPluginOutput } from '@config-dug';
+import { ConfigDugOptions, ConfigDugPlugin, ConfigDugPluginOutput, BaseConfigDugPlugin } from '@config-dug';
 
 import createDebug from 'debug';
-import ms from 'ms';
 import { getClient, IConfigCatClient, IManualPollOptions } from 'configcat-node';
 
 import { UntypedConfig, z } from '../../config-dug/src';
@@ -60,14 +59,13 @@ interface ConfigCatTargetedFlag {
 
 const debug = createDebug('config-dug:plugin:config-cat');
 
-class ConfigCatPlugin implements ConfigDugPlugin {
-  private pluginOptions: ConfigCatPluginOptions;
+class ConfigCatPlugin extends BaseConfigDugPlugin<ConfigCatPluginOptions> implements ConfigDugPlugin {
   private valueOrigins: Record<string, string[]> = {};
   private initialized: boolean = false;
   private client: IConfigCatClient;
 
   constructor(options: ConfigCatPluginOptions) {
-    this.pluginOptions = options;
+    super(options);
   }
 
   public initialize = async (_: ConfigDugOptions, environmentVariables: UntypedConfig): Promise<void> => {
@@ -87,7 +85,6 @@ class ConfigCatPlugin implements ConfigDugPlugin {
     }
 
     const values: Record<string, unknown> = {};
-    const nextReloadIn = this.getNextReloadInterval(this.pluginOptions.reloadInterval);
 
     // All feature flag values will be loaded including targeted flags using an undefined target
     const configs = await this.client.getAllValuesAsync();
@@ -102,6 +99,7 @@ class ConfigCatPlugin implements ConfigDugPlugin {
     }
 
     this.recordValueOrigins(values, 'config-cat');
+    const nextReloadIn = this.getNextReloadIn();
 
     debug('plugin values', values);
     debug('plugin value origins', this.valueOrigins);
@@ -110,7 +108,7 @@ class ConfigCatPlugin implements ConfigDugPlugin {
     return {
       values,
       valueOrigins: this.valueOrigins,
-      nextReloadIn,
+      nextReloadIn: nextReloadIn,
     };
   };
 
@@ -135,20 +133,6 @@ class ConfigCatPlugin implements ConfigDugPlugin {
       }
     }
   };
-
-  private getNextReloadInterval(reloadInterval?: string | number): number | undefined {
-    if (!reloadInterval) {
-      return;
-    }
-
-    if (typeof reloadInterval === 'string') {
-      const reloadIn = ms(reloadInterval);
-
-      return reloadIn + Date.now();
-    } else if (typeof reloadInterval === 'number') {
-      return reloadInterval + Date.now();
-    }
-  }
 }
 
 export { ConfigCatPlugin };

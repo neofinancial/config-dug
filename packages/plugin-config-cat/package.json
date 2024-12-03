@@ -49,13 +49,12 @@
     "ms": "^2.1.3"
   },
   "peerDependencies": {
-    "config-dug": "^2.0.0-alpha.0"
+    "config-dug": "^2.0.0-alpha.1"
   },
   "devDependencies": {
     "@tsconfig/node18": "^1.0.3",
     "@types/debug": "^4.1.7",
     "@types/node": "^18.11.18",
-    "config-dug": "^2.0.0-alpha.0",
     "eslint": "8.57.0",
     "eslint-config-neo": "^0.12.0",
     "husky": "^9.1.7",
