@@ -150,9 +150,11 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
 
   private async loadConfig(): Promise<void> {
     const environmentName = getEnvironmentName(this.options.envKey);
+    // Environment variables are loaded at the beginning to allow for API keys to be loaded from the environment they will be loaded again as a part of the config
+    const environmentVariables = this.loadEnvironment(Object.keys(this.schema));
 
     if (!this.pluginsInitialized) {
-      await this.initializePlugins();
+      await this.initializePlugins(environmentVariables);
       this.pluginsInitialized = true;
     }
 
@@ -235,12 +237,12 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
     return values;
   }
 
-  private async initializePlugins(): Promise<void> {
+  private async initializePlugins(environmentVariables: UntypedConfig): Promise<void> {
     debug('initialize plugins');
 
     for (const plugin of this.options.plugins) {
       if (typeof plugin.initialize === 'function') {
-        await plugin.initialize(this.options);
+        await plugin.initialize(this.options, environmentVariables);
       }
     }
   }

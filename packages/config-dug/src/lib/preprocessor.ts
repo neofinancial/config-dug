@@ -153,10 +153,14 @@ const getPreprocessorByZodType = (schema: z.ZodFirstPartySchemaTypes): ((arg: st
         ].join('\n')
       );
 
+    case TypeName.ZodFunction:
+      return (arg) => {
+        return arg;
+      };
+
     case TypeName.ZodVoid:
     case TypeName.ZodNever:
     case TypeName.ZodLazy:
-    case TypeName.ZodFunction:
     case TypeName.ZodPromise:
     case TypeName.ZodMap:
     case TypeName.ZodSet:

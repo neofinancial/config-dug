@@ -9,6 +9,6 @@ export type ConfigDugPluginOutput = {
 };
 
 export interface ConfigDugPlugin {
-  initialize?: (configDugOptions: ConfigDugOptions) => Promise<void>;
+  initialize?: (configDugOptions: ConfigDugOptions, environmentVariables: UntypedConfig) => Promise<void>;
   load?: () => Promise<ConfigDugPluginOutput>;
 }
