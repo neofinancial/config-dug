@@ -1,12 +1,33 @@
-import { ConfigDug, z } from '../../config-dug/src';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { ConfigDug, z } from '../../config-dug/src';
 import { ConfigCatPlugin, targetedConfigCatFlagSchema } from '../src';
 
+const mocks = vi.hoisted(() => {
+  const getClient = vi.fn();
+
+  return {
+    getClient,
+  };
+});
+
+vi.mock('configcat-node', () => {
+  return {
+    getClient: mocks.getClient,
+  };
+});
+
 describe('configCatPlugin', () => {
+  const getAllValuesAsync = vi.fn();
+  const getValueAsync = vi.fn();
+
   beforeEach(() => {
     process.env.CONFIG_CAT_SDK_KEY = undefined;
     vi.restoreAllMocks();
-    vi.resetAllMocks();
+    mocks.getClient.mockReturnValue({
+      getAllValuesAsync,
+      getValueAsync,
+    });
   });
 
   it('should throw an error if the sdk key is not set', async () => {
@@ -27,29 +48,17 @@ describe('configCatPlugin', () => {
     );
   });
 
-  it.only('should load config', async () => {
-    vi.mock('configcat-node', () => ({
-      getClient: () => {
-        const getAllValuesAsync = vi.fn();
-        const getValueAsync = vi.fn();
-
-        getAllValuesAsync.mockResolvedValue([
-          {
-            settingKey: 'value1',
-            settingValue: true,
-          },
-          {
-            settingKey: 'value2',
-            settingValue: 'test value',
-          },
-        ]);
-
-        return {
-          getAllValuesAsync,
-          getValueAsync,
-        };
+  it('should load config', async () => {
+    getAllValuesAsync.mockResolvedValue([
+      {
+        settingKey: 'value1',
+        settingValue: true,
       },
-    }));
+      {
+        settingKey: 'value2',
+        settingValue: 'test value',
+      },
+    ]);
 
     const schema = {
       CONFIG_CAT_SDK_KEY: z.string(),
@@ -78,6 +87,7 @@ describe('configCatPlugin', () => {
     });
 
     await configDug.load();
+
     const config = configDug.getConfig();
 
     expect(config.value1).toEqual(true);
@@ -85,21 +95,19 @@ describe('configCatPlugin', () => {
   });
 
   it('should properly overwrite targeted flag functions', async () => {
-    vi.mock('configcat-node', () => ({
-      getClient: () => {
-        const getAllValuesAsync = vi.fn();
-        const getValueAsync = vi.fn();
-
-        getAllValuesAsync.mockResolvedValue([]);
-        getValueAsync.mockResolvedValueOnce(true);
-        getValueAsync.mockResolvedValueOnce('test value');
-
-        return {
-          getAllValuesAsync,
-          getValueAsync,
-        };
+    getAllValuesAsync.mockResolvedValue([
+      {
+        settingKey: 'value1',
+        settingValue: true,
       },
-    }));
+      {
+        settingKey: 'value2',
+        settingValue: 'test value',
+      },
+    ]);
+
+    getValueAsync.mockResolvedValueOnce(true);
+    getValueAsync.mockResolvedValueOnce('test value');
 
     const schema = {
       CONFIG_CAT_SDK_KEY: z.string(),
@@ -118,6 +126,16 @@ describe('configCatPlugin', () => {
     const configCatPlugin = new ConfigCatPlugin({
       sdkKeyName: 'CONFIG_CAT_SDK_KEY',
       sourceKeyStyle: 'SCREAMING_SNAKE_CASE',
+      targetedFlags: [
+        {
+          key: 'value1',
+          defaultValue: false,
+        },
+        {
+          key: 'value2',
+          defaultValue: 'test default',
+        },
+      ],
     });
 
     process.env.CONFIG_CAT_SDK_KEY = 'some-config-string';
@@ -128,6 +146,7 @@ describe('configCatPlugin', () => {
     });
 
     await configDug.load();
+
     const config = configDug.getConfig();
 
     expect(typeof config.value1).toEqual('function');

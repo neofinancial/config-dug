@@ -1,8 +1,9 @@
-import { ConfigDugPlugin, ConfigDugOptions, ConfigDugPluginOutput } from '../../config-dug/src';
+import { ConfigDugOptions, ConfigDugPlugin, ConfigDugPluginOutput } from '@config-dug';
 
 import createDebug from 'debug';
 import ms from 'ms';
-import * as configCat from 'configcat-node';
+import { getClient, IConfigCatClient, IManualPollOptions } from 'configcat-node';
+
 import { UntypedConfig, z } from '../../config-dug/src';
 
 export const targetedConfigCatFlagSchema = z
@@ -15,7 +16,7 @@ export const targetedConfigCatFlagSchema = z
       custom: z.record(z.string(), z.string() || z.number()).optional(),
     })
   )
-  .returns(z.boolean() || z.string() || z.number() || z.null() || z.undefined());
+  .returns(z.promise(z.union([z.boolean(), z.string(), z.number(), z.null(), z.undefined()])));
 
 type ConfigCatValueType = string | number | boolean | null | undefined;
 interface ConfigCatTargetUser {
@@ -45,7 +46,7 @@ enum PollingMode {
 }
 
 export interface ConfigCatPluginOptions {
-  configCatOptions?: configCat.IManualPollOptions;
+  configCatOptions?: IManualPollOptions;
   reloadInterval?: string | number;
   sdkKeyName: string;
   sourceKeyStyle?: string;
@@ -63,23 +64,20 @@ class ConfigCatPlugin implements ConfigDugPlugin {
   private pluginOptions: ConfigCatPluginOptions;
   private valueOrigins: Record<string, string[]> = {};
   private initialized: boolean = false;
-  private client: configCat.IConfigCatClient;
+  private client: IConfigCatClient;
 
   constructor(options: ConfigCatPluginOptions) {
     this.pluginOptions = options;
   }
 
-  public initialize = async (
-    configDugOptions: ConfigDugOptions,
-    environmentVariables: UntypedConfig
-  ): Promise<void> => {
-    console.log(environmentVariables);
+  public initialize = async (_: ConfigDugOptions, environmentVariables: UntypedConfig): Promise<void> => {
     const sdkKey = environmentVariables[this.pluginOptions.sdkKeyName] as string | undefined;
+
     if (!sdkKey) {
       throw new Error(`Environment variable ${this.pluginOptions.sdkKeyName} is required to be configured.`);
     }
 
-    this.client = configCat.getClient(sdkKey, PollingMode.ManualPoll, this.pluginOptions.configCatOptions);
+    this.client = getClient(sdkKey, PollingMode.ManualPoll, this.pluginOptions.configCatOptions);
     this.initialized = true;
   };
 
@@ -88,12 +86,11 @@ class ConfigCatPlugin implements ConfigDugPlugin {
       throw new Error('Plugin not initialized');
     }
 
-    let values: Record<string, unknown> = {};
+    const values: Record<string, unknown> = {};
     const nextReloadIn = this.getNextReloadInterval(this.pluginOptions.reloadInterval);
 
     // All feature flag values will be loaded including targeted flags using an undefined target
     const configs = await this.client.getAllValuesAsync();
-    console.log(configs);
 
     for (const config of configs) {
       values[config.settingKey] = config.settingValue;
@@ -125,10 +122,10 @@ class ConfigCatPlugin implements ConfigDugPlugin {
     };
   };
 
-  private recordValueOrigins = (values: Record<string, unknown>, origin: string) => {
+  private recordValueOrigins = (values: Record<string, unknown>, origin: string): void => {
     for (const key of Object.keys(values)) {
       if (this.valueOrigins[key]) {
-        const last = this.valueOrigins[key][this.valueOrigins[key].length - 1];
+        const last = this.valueOrigins[key].at(-1);
 
         if (last !== origin) {
           this.valueOrigins[key] = [...this.valueOrigins[key], origin];
