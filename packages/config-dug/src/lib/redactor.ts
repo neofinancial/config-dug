@@ -1,6 +1,6 @@
 import { ConfigDugConfig, ConfigDugSchema, ConfigDugUnsealedConfig, ExtendedSchema } from '../config-dug.js';
 
-const defaultRedactorFn = () => '[REDACTED]';
+const defaultRedactorFn = (): string => '[REDACTED]';
 
 const redactConfig = <T extends ConfigDugSchema>(schema: T, values: ConfigDugConfig<T>): ConfigDugConfig<T> => {
   const redactedValues: ConfigDugUnsealedConfig<T> = {};

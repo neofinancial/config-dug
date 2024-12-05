@@ -1,9 +1,10 @@
 import EventEmitter from 'events';
 import createDebug from 'debug';
 import { z } from 'zod';
+import * as changeKeys from 'change-case/keys';
 
-import { getOptions, ConfigDugOptions, ConfigDugOptionsWithDefaults } from './lib/options.js';
-import { recordOrigin, recordOriginDefaults, mergeOrigins } from './lib/origins.js';
+import { ConfigDugOptions, ConfigDugOptionsWithDefaults, getOptions } from './lib/options.js';
+import { mergeOrigins, recordOrigin, recordOriginDefaults } from './lib/origins.js';
 import { logger } from './lib/logger.js';
 import { ConfigDugError } from './lib/errors.js';
 import { loadConfigFile } from './lib/config-file.js';
@@ -127,7 +128,7 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
     if (this.loaded === true) {
       debug('config already loaded');
 
-      return Promise.resolve();
+      return;
     }
 
     await this.loadConfig();
@@ -150,9 +151,11 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
 
   private async loadConfig(): Promise<void> {
     const environmentName = getEnvironmentName(this.options.envKey);
+    // Environment variables are loaded at the beginning to allow for API keys to be loaded from the environment they will be loaded again as a part of the config
+    const environmentVariables = this.loadEnvironment(Object.keys(this.schema));
 
     if (!this.pluginsInitialized) {
-      await this.initializePlugins();
+      await this.initializePlugins(environmentVariables);
       this.pluginsInitialized = true;
     }
 
@@ -235,31 +238,44 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
     return values;
   }
 
-  private async initializePlugins(): Promise<void> {
+  private async initializePlugins(environmentVariables: UntypedConfig): Promise<void> {
     debug('initialize plugins');
 
     for (const plugin of this.options.plugins) {
       if (typeof plugin.initialize === 'function') {
-        await plugin.initialize(this.options);
+        await plugin.initialize(this.options, environmentVariables);
       }
     }
   }
 
   private async loadPlugins(): Promise<UntypedConfig> {
     let values: UntypedConfig = {};
+    let nextPluginReloadIn: number | undefined;
 
     for (const plugin of this.options.plugins) {
       const pluginReturnValue: ConfigDugPluginOutput = await plugin.load();
+      //Coerce naming for the plugin values
+      const keyCorrectedValues = changeKeys[plugin.getPluginKeyStyle()](pluginReturnValue.values);
 
-      values = { ...values, ...pluginReturnValue.values };
+      console.log('pluginReturnValue', pluginReturnValue);
+      console.log('keyCorrectedValues', keyCorrectedValues);
+
+      values = { ...values, ...keyCorrectedValues };
 
       this.valueOrigins = mergeOrigins(this.valueOrigins, pluginReturnValue.valueOrigins);
 
       if (pluginReturnValue.nextReloadIn) {
-        this.reloadTimeout = setTimeout(async () => {
-          await this.reload();
-        }, pluginReturnValue.nextReloadIn);
+        // We will reload in time for the nearest plugin reload
+        nextPluginReloadIn = nextPluginReloadIn
+          ? Math.min(nextPluginReloadIn, pluginReturnValue.nextReloadIn)
+          : pluginReturnValue.nextReloadIn;
       }
+    }
+
+    if (nextPluginReloadIn) {
+      this.reloadTimeout = setTimeout(async () => {
+        await this.reload();
+      }, nextPluginReloadIn);
     }
 
     debug('plugin values', values);

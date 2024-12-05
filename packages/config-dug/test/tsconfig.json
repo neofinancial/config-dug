@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "types": ["vitest/globals"],
+    "noEmit": true,
+    "experimentalDecorators": true,
+    "strictNullChecks": false,
+    "strict": true,
+    "noImplicitOverride": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "isolatedModules": false,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "downlevelIteration": true
+  },
+  "include": ["./**/*", "../vite.config.js"]
+}
