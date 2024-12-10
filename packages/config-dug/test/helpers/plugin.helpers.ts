@@ -1,8 +1,8 @@
 import { vi } from 'vitest';
 
-import { KeyStyle } from '../../src/lib/plugin';
+import { ConfigDugPlugin, KeyStyle } from '../../src/lib/plugin';
 
-export function createMockPlugin() {
+export function createMockPlugin(): ConfigDugPlugin {
   return {
     load: vi.fn(),
     initialize: vi.fn(),

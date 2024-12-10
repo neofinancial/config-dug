@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
 import createDebug from 'debug';
 import { z } from 'zod';
-import * as changeKeys from 'change-case/keys';
+import * as changeKeys from './lib/change-case-keys';
 
 import { ConfigDugOptions, ConfigDugOptionsWithDefaults, getOptions } from './lib/options.js';
 import { mergeOrigins, recordOrigin, recordOriginDefaults } from './lib/origins.js';
@@ -256,9 +256,6 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
       const pluginReturnValue: ConfigDugPluginOutput = await plugin.load();
       //Coerce naming for the plugin values
       const keyCorrectedValues = changeKeys[plugin.getPluginKeyStyle()](pluginReturnValue.values);
-
-      console.log('pluginReturnValue', pluginReturnValue);
-      console.log('keyCorrectedValues', keyCorrectedValues);
 
       values = { ...values, ...keyCorrectedValues };
 

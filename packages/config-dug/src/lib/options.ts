@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { pluginSchema } from './plugin';
 
 export type ConfigDugOptions = z.infer<typeof optionsSchema>;
 export type ConfigDugOptionsWithDefaults = z.infer<typeof optionsWithDefaultsSchema>;
@@ -9,8 +10,7 @@ const optionsSchema = z
     envKey: z.string().optional(),
     loadConfigFiles: z.boolean().optional(),
     loadEnvironment: z.boolean().optional(),
-    // TODO: Add plugin types
-    plugins: z.array(z.any()).optional(),
+    plugins: z.array(pluginSchema).optional(),
     printConfig: z.boolean().optional(),
     strict: z.boolean().optional(),
     warnOnLocalConfigFile: z.boolean().optional(),
@@ -22,7 +22,7 @@ const optionsWithDefaultsSchema = z.object({
   envKey: z.string().default('APP_ENV'),
   loadConfigFiles: z.boolean().default(true),
   loadEnvironment: z.boolean().default(true),
-  plugins: z.array(z.any()).default([]),
+  plugins: z.array(pluginSchema).default([]),
   printConfig: z.boolean().default(false),
   strict: z.boolean().default(false),
   warnOnLocalConfigFile: z.boolean().default(true),

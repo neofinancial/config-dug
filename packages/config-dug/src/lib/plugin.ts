@@ -2,6 +2,7 @@ import ms from 'ms';
 
 import { ConfigDugSchema, UntypedConfig, ValueOrigins } from '../config-dug.js';
 import { ConfigDugOptions } from './options.js';
+import { z } from 'zod';
 
 export type ConfigDugPluginOutput = {
   nextReloadIn?: number;
@@ -9,6 +10,13 @@ export type ConfigDugPluginOutput = {
   values: UntypedConfig;
   valueOrigins: ValueOrigins;
 };
+
+const ConfigDugPluginOutputSchema = z.object({
+  nextReloadIn: z.number().optional(),
+  schema: z.record(z.ZodType.prototype).optional(),
+  values: z.record(z.unknown()),
+  valueOrigins: z.record(z.array(z.string())),
+});
 
 export interface ConfigDugPlugin {
   initialize?: (configDugOptions: ConfigDugOptions, environmentVariables: UntypedConfig) => Promise<void>;
@@ -23,15 +31,20 @@ export enum KeyStyle {
   capitalCase = 'capitalCase',
   constantCase = 'constantCase',
   dotCase = 'dotCase',
-  kebabCase = 'kebabCase',
   noCase = 'noCase',
   pascalCase = 'pascalCase',
-  pascalSnakeCase = 'pascalSnakeCase',
   pathCase = 'pathCase',
   sentenceCase = 'sentenceCase',
   snakeCase = 'snakeCase',
-  trainCase = 'trainCase',
 }
+
+export const pluginSchema = z.object({
+  initialize: z.function(),
+  load: z.function().returns(z.promise(ConfigDugPluginOutputSchema)),
+  reload: z.function().returns(z.promise(ConfigDugPluginOutputSchema)),
+  getPluginKeyStyle: z.function().returns(z.nativeEnum(KeyStyle)),
+  getNextReloadIn: z.function().returns(z.number().optional()),
+});
 
 export interface ConfigDugPluginOptions {
   reloadInterval?: string | number;

@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { createMockPlugin } from './helpers/plugin.helpers';
 import { ConfigDug } from '../src/config-dug';
 
-describe('configCatPlugin', () => {
+describe('config-dug Plugins', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
   });
