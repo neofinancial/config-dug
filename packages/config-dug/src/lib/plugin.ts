@@ -21,7 +21,7 @@ const ConfigDugPluginOutputSchema = z.object({
 export interface ConfigDugPlugin {
   initialize?: (configDugOptions: ConfigDugOptions, environmentVariables: UntypedConfig) => Promise<void>;
   load?: () => Promise<ConfigDugPluginOutput>;
-  reload?: () => Promise<ConfigDugPluginOutput>;
+  reload?: () => Promise<ConfigDugPluginOutput | undefined>;
   getPluginKeyStyle(): KeyStyle;
   getNextReloadIn(): number | undefined;
 }
@@ -51,7 +51,7 @@ export interface ConfigDugPluginOptions {
   pluginKeyStyle?: KeyStyle;
 }
 
-export abstract class BaseConfigDugPlugin<T extends ConfigDugPluginOptions> {
+export abstract class BaseConfigDugPlugin<T extends ConfigDugPluginOptions> implements ConfigDugPlugin {
   protected nextReloadAt: number | undefined;
   protected pluginOptions: T;
 

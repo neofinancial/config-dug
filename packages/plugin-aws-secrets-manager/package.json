@@ -1,6 +1,6 @@
 {
   "name": "@config-dug/plugin-aws-secrets-manager",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "author": "Neo Financial Engineering <engineering@neofinancial.com>",
   "license": "MIT",
   "engines": {

@@ -1,4 +1,10 @@
-import { ConfigDugPlugin, ConfigDugOptions, ConfigDugPluginOutput } from 'config-dug';
+import {
+  ConfigDugPlugin,
+  ConfigDugOptions,
+  ConfigDugPluginOutput,
+  BaseConfigDugPlugin,
+  ConfigDugPluginOptions,
+} from 'config-dug';
 import {
   SecretsManagerClient,
   GetSecretValueCommand,
@@ -13,7 +19,7 @@ export interface AWSSecretsManagerPluginSecretOptions {
   reloadInterval?: string | number;
 }
 
-export interface AWSSecretsManagerPluginOptions {
+export interface AWSSecretsManagerPluginOptions extends ConfigDugPluginOptions {
   secrets: AWSSecretsManagerPluginSecretOptions[];
 }
 
@@ -28,19 +34,17 @@ interface AWSSecretsManagerPluginSecret {
 
 const debug = createDebug('config-dug:plugin:aws-secrets-manager');
 
-class AWSSecretsManagerPlugin implements ConfigDugPlugin {
+class AWSSecretsManagerPlugin extends BaseConfigDugPlugin<AWSSecretsManagerPluginOptions> {
   private secrets: AWSSecretsManagerPluginSecret[] = [];
-  private pluginOptions: AWSSecretsManagerPluginOptions;
-  private configDugOptions: ConfigDugOptions = {};
   private valueOrigins: Record<string, string[]> = {};
   private initialized: boolean = false;
 
   constructor(options: AWSSecretsManagerPluginOptions) {
+    super(options);
     this.pluginOptions = options;
   }
 
-  public initialize = async (configDugOptions: ConfigDugOptions): Promise<void> => {
-    this.configDugOptions = configDugOptions;
+  public initialize = async (_: ConfigDugOptions): Promise<void> => {
     this.secrets = this.createSecrets();
 
     this.initialized = true;
