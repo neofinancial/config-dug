@@ -84,6 +84,7 @@ export { getConfig };
 | ---- | ---- | ------- | ------------|
 | `basePath` | `string` | `process.cwd()` | The directory to load config files from |
 | `envKey` | `string` | `APP_ENV` | The environment variable specifying the application environment |
+| `keyFormat` | `string` | `camelCase` | The style to transform all keys to |
 | `loadConfigFiles` | `boolean` | `true` | Load config values from `config.*.{js|cjs|mjs}` files |
 | `loadEnvironment` | `boolean` | `true` | Load config values from the environment |
 | `plugins` | | `[]` | An array of plugins to load. Plugins are evaluated in order so config values that come from a plugin that is specified later will override config values from plugins specified earlier |
