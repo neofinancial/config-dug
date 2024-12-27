@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { ConfigDug } from '../src/config-dug';
 
 describe('ConfigDug', () => {
