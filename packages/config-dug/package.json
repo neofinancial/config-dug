@@ -41,7 +41,8 @@
     "build": "tsc -b tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json",
     "watch": "tsc -b tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json --watch",
     "clean": "rimraf build",
-    "prepublishOnly": "npm run clean && npm run build"
+    "prepublishOnly": "npm run clean && npm run build",
+    "test": "vitest run --config ./test/vitest.config.ts"
   },
   "dependencies": {
     "chalk": "^4.1.2",
@@ -52,7 +53,10 @@
   "devDependencies": {
     "@tsconfig/node18": "^1.0.3",
     "@types/debug": "^4.1.7",
+    "@types/jest": "^29.5.14",
     "@types/node": "^18.11.18",
-    "typescript": "^5.0.4"
+    "@vitest/coverage-v8": "^2.1.8",
+    "typescript": "^5.0.4",
+    "vitest": "^2.1.8"
   }
 }
