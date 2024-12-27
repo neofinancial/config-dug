@@ -25,7 +25,8 @@
     "format": "prettier --write \"**/*.{ts,js,cjs,mjs,json,md}\"",
     "format:check": "prettier --debug-check \"**/*.{ts,js,cjs,mjs,json,md}\"",
     "pre-commit": "lint-staged",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "vitest run"
   },
   "lint-staged": {
     "*.{ts,js,cjs,mjs,json,md,yaml,yml}": [
@@ -33,9 +34,12 @@
     ]
   },
   "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@vitest/coverage-v8": "^2.1.8",
     "husky": "^7.0.2",
     "lint-staged": "^11.2.3",
     "prettier": "^2.4.1",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "vitest": "^2.1.8"
   }
 }
