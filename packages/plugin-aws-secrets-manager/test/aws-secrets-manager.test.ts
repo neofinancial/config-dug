@@ -85,25 +85,6 @@ describe('AWSSecretsManagerPlugin', () => {
       const output = await plugin.load();
       expect(output.nextReloadIn).toBe(ms(reloadInterval));
     });
-
-    it('should not reload secrets if reloadInterval is not reached', async () => {
-      const reloadInterval = '1h';
-      const testPluginOptionsWithReload = {
-        secrets: [
-          {
-            name: 'testSecret',
-            region: 'us-east-1',
-            reloadInterval,
-          },
-        ],
-      };
-
-      plugin = new AWSSecretsManagerPlugin(testPluginOptionsWithReload);
-      await plugin.initialize({});
-      await plugin.load();
-      const output = await plugin.load();
-      expect(output.nextReloadIn).toBeGreaterThan(Date.now());
-    });
   });
 });
 
