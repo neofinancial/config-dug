@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { ConfigDug } from 'config-dug';
 import { AWSSecretsManagerPlugin } from '../src/index';
 import { SecretsManagerClient } from '@aws-sdk/client-secrets-manager';
+import ms from 'ms';
 
 vi.mock('@aws-sdk/client-secrets-manager');
 
@@ -46,12 +47,71 @@ describe('AWSSecretsManagerPlugin', () => {
     it('should throw an error if load is called before initialize', async () => {
       await expect(plugin.load()).rejects.toThrowError('Plugin not initialized');
     });
+
+    it('should handle secrets with invalid JSON', async () => {
+      mockSecretsManagerClient.send.mockResolvedValueOnce({ SecretString: 'invalid-json' });
+      await plugin.initialize({});
+      await expect(plugin.load()).resolves.toEqual({
+        values: {},
+        valueOrigins: {},
+        nextReloadIn: undefined,
+      });
+    });
+
+    it('should handle empty secrets', async () => {
+      mockSecretsManagerClient.send.mockResolvedValueOnce({});
+      await plugin.initialize({});
+      await expect(plugin.load()).resolves.toEqual({
+        values: {},
+        valueOrigins: {},
+        nextReloadIn: undefined,
+      });
+    });
+
+    it('should reload secrets based on reloadInterval', async () => {
+      const reloadInterval = '1m';
+      const testPluginOptionsWithReload = {
+        secrets: [
+          {
+            name: 'testSecret',
+            region: 'us-east-1',
+            reloadInterval,
+          },
+        ],
+      };
+
+      plugin = new AWSSecretsManagerPlugin(testPluginOptionsWithReload);
+      await plugin.initialize({});
+      const output = await plugin.load();
+      expect(output.nextReloadIn).toBe(ms(reloadInterval));
+    });
+
+    it('should not reload secrets if reloadInterval is not reached', async () => {
+      const reloadInterval = '1h';
+      const testPluginOptionsWithReload = {
+        secrets: [
+          {
+            name: 'testSecret',
+            region: 'us-east-1',
+            reloadInterval,
+          },
+        ],
+      };
+
+      plugin = new AWSSecretsManagerPlugin(testPluginOptionsWithReload);
+      await plugin.initialize({});
+      await plugin.load();
+      const output = await plugin.load();
+      expect(output.nextReloadIn).toBeGreaterThan(Date.now());
+    });
   });
 });
 
 describe('ConfigDug with AWSSecretsManagerPlugin', () => {
   const testConfigSchema = {
-    testKey: z.string().default('defaultValue'),
+    testKey: {
+      schema: z.string(),
+    },
   };
 
   const testPluginOptions = {
@@ -67,8 +127,7 @@ describe('ConfigDug with AWSSecretsManagerPlugin', () => {
   const configDug = new ConfigDug(testConfigSchema, { plugins: [plugin] });
 
   it('should load config values from AWS Secrets Manager', async () => {
-    const a = await configDug.load();
-    console.log('🚀 ~ it ~ a:', a);
+    await configDug.load();
     const config = configDug.getConfig();
     expect(config).toEqual({ testKey: 'testValue' });
   });
