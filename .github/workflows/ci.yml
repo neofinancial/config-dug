@@ -23,8 +23,10 @@ jobs:
       - name: Install
         run: |
           npm i -g npm
-          npm ci --prefer-offline --omit=optional
+          npm ci --prefer-offline
       - name: Format Check
         run: npm run format:check
       - name: Build
         run: npm run build
+      - name: Test
+        run: npm run test
