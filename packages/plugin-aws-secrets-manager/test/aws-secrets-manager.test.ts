@@ -7,29 +7,29 @@ import ms from 'ms';
 
 vi.mock('@aws-sdk/client-secrets-manager');
 
+const mockSecretValue = JSON.stringify({ testKey: 'testValue' });
+
+const mockSecretsManagerClient = {
+  send: vi.fn().mockResolvedValue({ SecretString: mockSecretValue }),
+};
+
+const testPluginOptions = {
+  secrets: [
+    {
+      name: 'testSecret',
+      region: 'us-east-1',
+    },
+  ],
+};
+
+let plugin: AWSSecretsManagerPlugin;
+
+beforeEach(() => {
+  (SecretsManagerClient as jest.Mock).mockImplementation(() => mockSecretsManagerClient);
+  plugin = new AWSSecretsManagerPlugin(testPluginOptions);
+});
+
 describe('AWSSecretsManagerPlugin', () => {
-  const mockSecretValue = JSON.stringify({ testKey: 'testValue' });
-
-  const mockSecretsManagerClient = {
-    send: vi.fn().mockResolvedValue({ SecretString: mockSecretValue }),
-  };
-
-  const testPluginOptions = {
-    secrets: [
-      {
-        name: 'testSecret',
-        region: 'us-east-1',
-      },
-    ],
-  };
-
-  let plugin: AWSSecretsManagerPlugin;
-
-  beforeEach(() => {
-    (SecretsManagerClient as jest.Mock).mockImplementation(() => mockSecretsManagerClient);
-    plugin = new AWSSecretsManagerPlugin(testPluginOptions);
-  });
-
   describe('initialize', () => {
     it('should initialize the plugin', async () => {
       await plugin.initialize({});
@@ -93,15 +93,6 @@ describe('ConfigDug with AWSSecretsManagerPlugin', () => {
     testKey: {
       schema: z.string(),
     },
-  };
-
-  const testPluginOptions = {
-    secrets: [
-      {
-        name: 'testSecret',
-        region: 'us-east-1',
-      },
-    ],
   };
 
   const plugin = new AWSSecretsManagerPlugin(testPluginOptions);
