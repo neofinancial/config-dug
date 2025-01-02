@@ -1,6 +1,6 @@
 import ms from 'ms';
 
-import { ConfigDugSchema, UntypedConfig, ValueOrigins } from '../config-dug.js';
+import { ConfigDugSchema, DeepReadonlyObject, TypedConfig, UntypedConfig, ValueOrigins } from '../config-dug.js';
 import { ConfigDugOptions } from './options.js';
 import { z } from 'zod';
 
@@ -19,40 +19,31 @@ const ConfigDugPluginOutputSchema = z.object({
 });
 
 export interface ConfigDugPlugin {
-  initialize?: (configDugOptions: ConfigDugOptions, environmentVariables: UntypedConfig) => Promise<void>;
-  load?: () => Promise<ConfigDugPluginOutput>;
-  reload?: () => Promise<ConfigDugPluginOutput | undefined>;
-  getPluginKeyStyle(): KeyStyle;
+  isInitialized: () => boolean;
+  initialize: (
+    configDugOptions: ConfigDugOptions,
+    currentConfig: DeepReadonlyObject<TypedConfig<any>>
+  ) => Promise<void>;
+  load: () => Promise<ConfigDugPluginOutput>;
+  reload: () => Promise<ConfigDugPluginOutput | undefined>;
   getNextReloadIn(): number | undefined;
 }
 
-export enum KeyStyle {
-  camelCase = 'camelCase',
-  capitalCase = 'capitalCase',
-  constantCase = 'constantCase',
-  dotCase = 'dotCase',
-  noCase = 'noCase',
-  pascalCase = 'pascalCase',
-  pathCase = 'pathCase',
-  sentenceCase = 'sentenceCase',
-  snakeCase = 'snakeCase',
-}
-
 export const pluginSchema = z.object({
-  initialize: z.function(),
+  isInitialized: z.function().returns(z.boolean()),
+  initialize: z.function().returns(z.promise(z.void())),
   load: z.function().returns(z.promise(ConfigDugPluginOutputSchema)),
   reload: z.function().returns(z.promise(ConfigDugPluginOutputSchema)),
-  getPluginKeyStyle: z.function().returns(z.nativeEnum(KeyStyle)),
   getNextReloadIn: z.function().returns(z.number().optional()),
 });
 
 export interface ConfigDugPluginOptions {
   reloadInterval?: string | number;
-  pluginKeyStyle?: KeyStyle;
 }
 
 export abstract class BaseConfigDugPlugin<T extends ConfigDugPluginOptions> implements ConfigDugPlugin {
   protected nextReloadAt: number | undefined;
+  public initialized: boolean = false;
   protected pluginOptions: T;
 
   public constructor(options: T) {
@@ -63,7 +54,29 @@ export abstract class BaseConfigDugPlugin<T extends ConfigDugPluginOptions> impl
     this.nextReloadAt = nextReloadIn ? nextReloadIn + Date.now() : undefined;
   }
 
-  public abstract initialize(configDugOptions: ConfigDugOptions, environmentVariables: UntypedConfig): Promise<void>;
+  /**
+   * Initializes the plugin with the provided options and current configuration.
+   *
+   * @param configDugOptions - The options to configure the plugin.
+   * @param currentConfig - The current configuration object, which is read-only.
+   * @returns A promise that resolves when the initialization is complete, or void if the initialization is synchronous.
+   */
+  public async initialize(
+    configDugOptions: ConfigDugOptions,
+    currentConfig: DeepReadonlyObject<TypedConfig<any>>
+  ): Promise<void> {
+    this.initialized = true;
+  }
+
+  /**
+   * Checks if the plugin has been initialized.
+   *
+   * @returns {boolean} True if the plugin is initialized, otherwise false.
+   */
+  public isInitialized(): boolean {
+    return this.initialized;
+  }
+
   public abstract load(): Promise<ConfigDugPluginOutput>;
 
   public getNextReloadIn(): number | undefined {
@@ -78,10 +91,6 @@ export abstract class BaseConfigDugPlugin<T extends ConfigDugPluginOptions> impl
     } else if (typeof this.pluginOptions.reloadInterval === 'number') {
       return this.pluginOptions.reloadInterval;
     }
-  }
-
-  public getPluginKeyStyle(): KeyStyle {
-    return this.pluginOptions.pluginKeyStyle ?? KeyStyle.noCase;
   }
 
   public async reload(): Promise<ConfigDugPluginOutput | undefined> {

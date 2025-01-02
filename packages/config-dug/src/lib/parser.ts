@@ -45,7 +45,7 @@ const parseConfig = <T extends ConfigDugSchema>(
           defaultValue = schemaOrExtendedSchema.schema._def.defaultValue();
           defaults.push(key);
         }
-
+        schemaOrExtendedSchema.schema.parse;
         parsed[key] = strict
           ? schemaOrExtendedSchema.schema.parse(value, { errorMap })
           : getSchemaWithPreprocessor(schemaOrExtendedSchema.schema).parse(value, { errorMap });

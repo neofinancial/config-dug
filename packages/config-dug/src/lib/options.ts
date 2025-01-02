@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { pluginSchema } from './plugin';
+import { KeyStyle } from './change-case-keys';
 
 export type ConfigDugOptions = z.infer<typeof optionsSchema>;
 export type ConfigDugOptionsWithDefaults = z.infer<typeof optionsWithDefaultsSchema>;
@@ -8,6 +9,7 @@ const optionsSchema = z
   .object({
     basePath: z.string().optional(),
     envKey: z.string().optional(),
+    keyStyle: z.nativeEnum(KeyStyle).optional(),
     loadConfigFiles: z.boolean().optional(),
     loadEnvironment: z.boolean().optional(),
     plugins: z.array(pluginSchema).optional(),
@@ -20,6 +22,7 @@ const optionsSchema = z
 const optionsWithDefaultsSchema = z.object({
   basePath: z.string().default(process.cwd()),
   envKey: z.string().default('APP_ENV'),
+  keyStyle: z.nativeEnum(KeyStyle).default(KeyStyle.camelCase),
   loadConfigFiles: z.boolean().default(true),
   loadEnvironment: z.boolean().default(true),
   plugins: z.array(pluginSchema).default([]),

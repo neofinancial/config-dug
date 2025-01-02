@@ -151,25 +151,21 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
 
   private async loadConfig(): Promise<void> {
     const environmentName = getEnvironmentName(this.options.envKey);
-    // Environment variables are loaded at the beginning to allow for API keys to be loaded from the environment they will be loaded again as a part of the config
     const environmentVariables = this.loadEnvironment(Object.keys(this.schema));
-
-    if (!this.pluginsInitialized) {
-      await this.initializePlugins(environmentVariables);
-      this.pluginsInitialized = true;
-    }
 
     this.valueOrigins = {};
     this.rawValues = {
       ...(await this.loadConfigFile('config.default')),
       ...(await this.loadConfigFile(`config.${environmentName}`)),
-      ...(await this.loadPlugins()),
+      ...(await this.loadPlugins(environmentVariables)),
       ...(await this.loadLocalConfigFile(`config.${environmentName}.local`)),
       ...(await this.loadLocalConfigFile('config.local')),
       ...this.loadEnvironment(Object.keys(this.schema)),
     };
 
     debug('load raw values', this.rawValues);
+
+    console.log(this.rawValues);
 
     const [validatedValues, defaults] = parseConfig(this.schema, this.rawValues, this.options.strict);
 
@@ -195,12 +191,13 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
     }
 
     const [resolvedFilename, values] = await loadConfigFile(filename, this.options.basePath, ['js', 'cjs', 'mjs']);
+    const keyCorrectedValues = changeKeys[this.options.keyStyle](values);
 
     if (resolvedFilename) {
-      this.valueOrigins = recordOrigin(this.valueOrigins, values, resolvedFilename);
+      this.valueOrigins = recordOrigin(this.valueOrigins, keyCorrectedValues, resolvedFilename);
     }
 
-    return values;
+    return keyCorrectedValues;
   }
 
   private async loadLocalConfigFile(filename: string): Promise<UntypedConfig> {
@@ -213,13 +210,14 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
     }
 
     const [resolvedFilename, values] = await loadConfigFile(filename, this.options.basePath, ['js', 'cjs', 'mjs']);
+    const keyCorrectedValues = changeKeys[this.options.keyStyle](values);
 
     if (resolvedFilename) {
       this.options.warnOnLocalConfigFile && logger.warn(`Loaded local config file: ${resolvedFilename}`);
-      this.valueOrigins = recordOrigin(this.valueOrigins, values, resolvedFilename);
+      this.valueOrigins = recordOrigin(this.valueOrigins, keyCorrectedValues, resolvedFilename);
     }
 
-    return values;
+    return keyCorrectedValues;
   }
 
   private loadEnvironment(keys: string[]): UntypedConfig {
@@ -232,33 +230,22 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
     }
 
     const values = loadEnvironment(keys);
-
     this.valueOrigins = recordOrigin(this.valueOrigins, values, 'environment');
 
     return values;
   }
 
-  private async initializePlugins(environmentVariables: UntypedConfig): Promise<void> {
-    debug('initialize plugins');
-
-    for (const plugin of this.options.plugins) {
-      if (typeof plugin.initialize === 'function') {
-        await plugin.initialize(this.options, environmentVariables);
-      }
-    }
-  }
-
-  private async loadPlugins(): Promise<UntypedConfig> {
-    let values: UntypedConfig = {};
+  private async loadPlugins(values: UntypedConfig): Promise<UntypedConfig> {
     let nextPluginReloadIn: number | undefined;
 
     for (const plugin of this.options.plugins) {
+      if (!plugin.isInitialized()) {
+        await plugin.initialize(this.options, values);
+      }
+
       const pluginReturnValue: ConfigDugPluginOutput = await plugin.load();
-      //Coerce naming for the plugin values
-      const keyCorrectedValues = changeKeys[plugin.getPluginKeyStyle()](pluginReturnValue.values);
-
+      const keyCorrectedValues = changeKeys[this.options.keyStyle](pluginReturnValue.values);
       values = { ...values, ...keyCorrectedValues };
-
       this.valueOrigins = mergeOrigins(this.valueOrigins, pluginReturnValue.valueOrigins);
 
       if (pluginReturnValue.nextReloadIn) {
@@ -268,6 +255,8 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
           : pluginReturnValue.nextReloadIn;
       }
     }
+
+    console.log(values);
 
     if (nextPluginReloadIn) {
       this.reloadTimeout = setTimeout(async () => {
