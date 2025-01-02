@@ -37,7 +37,6 @@ const debug = createDebug('config-dug:plugin:aws-secrets-manager');
 class AWSSecretsManagerPlugin extends BaseConfigDugPlugin<AWSSecretsManagerPluginOptions> {
   private secrets: AWSSecretsManagerPluginSecret[] = [];
   private valueOrigins: Record<string, string[]> = {};
-  private initialized: boolean = false;
 
   constructor(options: AWSSecretsManagerPluginOptions) {
     super(options);
