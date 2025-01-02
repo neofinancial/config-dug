@@ -165,8 +165,6 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
 
     debug('load raw values', this.rawValues);
 
-    console.log(this.rawValues);
-
     const [validatedValues, defaults] = parseConfig(this.schema, this.rawValues, this.options.strict);
 
     this.validatedValues = validatedValues;
@@ -255,8 +253,6 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
           : pluginReturnValue.nextReloadIn;
       }
     }
-
-    console.log(values);
 
     if (nextPluginReloadIn) {
       this.reloadTimeout = setTimeout(async () => {
