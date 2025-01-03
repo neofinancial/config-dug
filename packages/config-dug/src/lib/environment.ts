@@ -11,14 +11,15 @@ const getEnvironmentName = (envKey: string): string => {
 
   const environmentName = process.env[envKey];
 
-  if (!environmentName) {
+  if (environmentName) {
+    debug('resolved environment name', environmentName);
+
+    return environmentName;
+  } else {
     debug('unable to load environment name, defaulting to `development`');
     logger.warn(`Unable to load environment from ${envKey}. Defaulting to \`development\`.`);
 
     return 'development';
-  } else {
-    debug('resolved environment name', environmentName);
-    return environmentName;
   }
 };
 
