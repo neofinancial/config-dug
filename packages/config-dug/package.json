@@ -60,5 +60,8 @@
     "@types/node": "^18.11.18",
     "eslint-config-neo": "^0.12.0",
     "typescript": "^5.0.4"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.9.6"
   }
 }
