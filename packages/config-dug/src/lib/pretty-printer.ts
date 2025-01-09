@@ -14,7 +14,7 @@ const getValue = (value: unknown): string => {
   }
 };
 
-const printConfig = <T extends ConfigDugSchema>(values: ConfigDugConfig<T>, valueOrigins: ValueOrigins) => {
+const printConfig = <T extends ConfigDugSchema>(values: ConfigDugConfig<T>, valueOrigins: ValueOrigins): void => {
   const sortedKeyValues = Object.entries(values).sort((a, b) => (a[0] > b[0] ? 1 : -1));
 
   for (const [key, value] of sortedKeyValues) {

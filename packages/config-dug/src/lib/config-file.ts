@@ -65,7 +65,7 @@ const loadConfigFile = async (
     }
   }
 
-  return Promise.resolve([undefined, {}]);
+  return [undefined, {}];
 };
 
 export { loadConfigFile };

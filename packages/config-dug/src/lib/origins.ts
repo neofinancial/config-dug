@@ -1,6 +1,6 @@
 import createDebug from 'debug';
 
-import { ValueOrigins, UntypedConfig } from '../config-dug.js';
+import { UntypedConfig, ValueOrigins } from '../config-dug.js';
 
 const debug = createDebug('config-dug:lib:origins');
 
