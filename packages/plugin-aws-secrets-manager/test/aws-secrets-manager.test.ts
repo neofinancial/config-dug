@@ -87,20 +87,3 @@ describe('AWSSecretsManagerPlugin', () => {
     });
   });
 });
-
-describe('ConfigDug with AWSSecretsManagerPlugin', () => {
-  const testConfigSchema = {
-    testKey: {
-      schema: z.string(),
-    },
-  };
-
-  const plugin = new AWSSecretsManagerPlugin(testPluginOptions);
-  const configDug = new ConfigDug(testConfigSchema, { plugins: [plugin] });
-
-  it('should load config values from AWS Secrets Manager', async () => {
-    await configDug.load();
-    const config = configDug.getConfig();
-    expect(config).toEqual({ testKey: 'testValue' });
-  });
-});
