@@ -127,7 +127,7 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
     if (this.loaded === true) {
       debug('config already loaded');
 
-      return Promise.resolve();
+      return;
     }
 
     await this.loadConfig();
@@ -150,19 +150,13 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
 
   private async loadConfig(): Promise<void> {
     const environmentName = getEnvironmentName(this.options.envKey);
-    // Environment variables are loaded at the beginning to allow for API keys to be loaded from the environment they will be loaded again as a part of the config
     const environmentVariables = this.loadEnvironment(Object.keys(this.schema));
-
-    if (!this.pluginsInitialized) {
-      await this.initializePlugins(environmentVariables);
-      this.pluginsInitialized = true;
-    }
 
     this.valueOrigins = {};
     this.rawValues = {
       ...(await this.loadConfigFile('config.default')),
       ...(await this.loadConfigFile(`config.${environmentName}`)),
-      ...(await this.loadPlugins()),
+      ...(await this.loadPlugins(environmentVariables)),
       ...(await this.loadLocalConfigFile(`config.${environmentName}.local`)),
       ...(await this.loadLocalConfigFile('config.local')),
       ...this.loadEnvironment(Object.keys(this.schema)),
@@ -194,12 +188,13 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
     }
 
     const [resolvedFilename, values] = await loadConfigFile(filename, this.options.basePath, ['js', 'cjs', 'mjs']);
+    const keyCorrectedValues = changeKeys[this.options.keyStyle](values);
 
     if (resolvedFilename) {
       this.valueOrigins = recordOrigin(this.valueOrigins, values, resolvedFilename);
     }
 
-    return values;
+    return keyCorrectedValues;
   }
 
   private async loadLocalConfigFile(filename: string): Promise<UntypedConfig> {
@@ -212,13 +207,14 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
     }
 
     const [resolvedFilename, values] = await loadConfigFile(filename, this.options.basePath, ['js', 'cjs', 'mjs']);
+    const keyCorrectedValues = changeKeys[this.options.keyStyle](values);
 
     if (resolvedFilename) {
       this.options.warnOnLocalConfigFile && logger.warn(`Loaded local config file: ${resolvedFilename}`);
-      this.valueOrigins = recordOrigin(this.valueOrigins, values, resolvedFilename);
+      this.valueOrigins = recordOrigin(this.valueOrigins, keyCorrectedValues, resolvedFilename);
     }
 
-    return values;
+    return keyCorrectedValues;
   }
 
   private loadEnvironment(keys: string[]): UntypedConfig {
@@ -247,10 +243,14 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
     }
   }
 
-  private async loadPlugins(): Promise<UntypedConfig> {
-    let values: UntypedConfig = {};
+  private async loadPlugins(initialValues: UntypedConfig): Promise<UntypedConfig> {
+    let values: UntypedConfig = { ...initialValues };
 
     for (const plugin of this.options.plugins) {
+      if (!plugin.isInitialized()) {
+        plugin.initialize(this.options, values);
+      }
+
       const pluginReturnValue: ConfigDugPluginOutput = await plugin.load();
 
       values = { ...values, ...pluginReturnValue.values };

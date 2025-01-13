@@ -41,7 +41,7 @@ export interface ConfigDugPluginOptions {
   reloadInterval?: string | number;
 }
 
-export class BaseConfigDugPlugin<T extends ConfigDugPluginOptions> implements ConfigDugPlugin {
+export abstract class BaseConfigDugPlugin<T extends ConfigDugPluginOptions> implements ConfigDugPlugin {
   protected nextReloadAt: number | undefined;
   public initialized: boolean = false;
   protected pluginOptions: T;
@@ -77,9 +77,7 @@ export class BaseConfigDugPlugin<T extends ConfigDugPluginOptions> implements Co
     return this.initialized;
   }
 
-  public load(): Promise<ConfigDugPluginOutput> {
-    return {} as any;
-  }
+  public abstract load(): Promise<ConfigDugPluginOutput>;
 
   public getNextReloadIn(): number | undefined {
     if (!this.pluginOptions.reloadInterval) {
