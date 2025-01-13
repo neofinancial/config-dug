@@ -1,9 +1,10 @@
 import EventEmitter from 'events';
 import createDebug from 'debug';
 import { z } from 'zod';
+import * as changeKeys from './lib/change-case-keys';
 
-import { getOptions, ConfigDugOptions, ConfigDugOptionsWithDefaults } from './lib/options.js';
-import { recordOrigin, recordOriginDefaults, mergeOrigins } from './lib/origins.js';
+import { ConfigDugOptions, ConfigDugOptionsWithDefaults, getOptions } from './lib/options.js';
+import { mergeOrigins, recordOrigin, recordOriginDefaults } from './lib/origins.js';
 import { logger } from './lib/logger.js';
 import { ConfigDugError } from './lib/errors.js';
 import { loadConfigFile } from './lib/config-file.js';
@@ -191,7 +192,7 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
     const keyCorrectedValues = changeKeys[this.options.keyStyle](values);
 
     if (resolvedFilename) {
-      this.valueOrigins = recordOrigin(this.valueOrigins, values, resolvedFilename);
+      this.valueOrigins = recordOrigin(this.valueOrigins, keyCorrectedValues, resolvedFilename);
     }
 
     return keyCorrectedValues;
@@ -227,41 +228,36 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
     }
 
     const values = loadEnvironment(keys);
-
     this.valueOrigins = recordOrigin(this.valueOrigins, values, 'environment');
 
     return values;
   }
 
-  private async initializePlugins(environmentVariables: UntypedConfig): Promise<void> {
-    debug('initialize plugins');
-
-    for (const plugin of this.options.plugins) {
-      if (typeof plugin.initialize === 'function') {
-        await plugin.initialize(this.options, environmentVariables);
-      }
-    }
-  }
-
-  private async loadPlugins(initialValues: UntypedConfig): Promise<UntypedConfig> {
-    let values: UntypedConfig = { ...initialValues };
+  private async loadPlugins(values: UntypedConfig): Promise<UntypedConfig> {
+    let nextPluginReloadIn: number | undefined;
 
     for (const plugin of this.options.plugins) {
       if (!plugin.isInitialized()) {
-        plugin.initialize(this.options, values);
+        await plugin.initialize(this.options, values);
       }
 
       const pluginReturnValue: ConfigDugPluginOutput = await plugin.load();
-
-      values = { ...values, ...pluginReturnValue.values };
-
+      const keyCorrectedValues = changeKeys[this.options.keyStyle](pluginReturnValue.values);
+      values = { ...values, ...keyCorrectedValues };
       this.valueOrigins = mergeOrigins(this.valueOrigins, pluginReturnValue.valueOrigins);
 
       if (pluginReturnValue.nextReloadIn) {
-        this.reloadTimeout = setTimeout(async () => {
-          await this.reload();
-        }, pluginReturnValue.nextReloadIn);
+        // We will reload in time for the nearest plugin reload
+        nextPluginReloadIn = nextPluginReloadIn
+          ? Math.min(nextPluginReloadIn, pluginReturnValue.nextReloadIn)
+          : pluginReturnValue.nextReloadIn;
       }
+    }
+
+    if (nextPluginReloadIn) {
+      this.reloadTimeout = setTimeout(async () => {
+        await this.reload();
+      }, nextPluginReloadIn);
     }
 
     debug('plugin values', values);
