@@ -1,9 +1,9 @@
-import { ConfigDugOptions, ConfigDugPlugin, ConfigDugPluginOutput, BaseConfigDugPlugin } from '@config-dug';
+import { ConfigDugOptions, ConfigDugPlugin, ConfigDugPluginOutput, BaseConfigDugPlugin, z } from 'config-dug';
 
 import createDebug from 'debug';
 import { getClient, IConfigCatClient, IManualPollOptions } from 'configcat-node';
 
-import { UntypedConfig, z } from '../../config-dug/src';
+import { DeepReadonlyObject, TypedConfig } from 'config-dug/src/config-dug';
 
 export const targetedConfigCatFlagSchema = z
   .function()
@@ -61,18 +61,18 @@ const debug = createDebug('config-dug:plugin:config-cat');
 
 class ConfigCatPlugin extends BaseConfigDugPlugin<ConfigCatPluginOptions> implements ConfigDugPlugin {
   private valueOrigins: Record<string, string[]> = {};
-  private initialized: boolean = false;
   private client: IConfigCatClient;
 
-  constructor(options: ConfigCatPluginOptions) {
-    super(options);
-  }
-
-  public initialize = async (_: ConfigDugOptions, environmentVariables: UntypedConfig): Promise<void> => {
-    const sdkKey = environmentVariables[this.pluginOptions.sdkKeyName] as string | undefined;
+  public override initialize = async (
+    _: ConfigDugOptions,
+    currentConfig: DeepReadonlyObject<TypedConfig<any>>
+  ): Promise<void> => {
+    const sdkKey = currentConfig[this.pluginOptions.sdkKeyName] as string | undefined;
 
     if (!sdkKey) {
-      throw new Error(`Environment variable ${this.pluginOptions.sdkKeyName} is required to be configured.`);
+      throw new Error(
+        `Config value: ${this.pluginOptions.sdkKeyName} is required to be configured before loading this plugin.`
+      );
     }
 
     this.client = getClient(sdkKey, PollingMode.ManualPoll, this.pluginOptions.configCatOptions);

@@ -38,13 +38,15 @@ describe('configCatPlugin', () => {
       sourceKeyStyle: 'SCREAMING_SNAKE_CASE',
     });
 
+    console.log(configCatPlugin);
+
     const configDug = new ConfigDug(schema, {
       plugins: [configCatPlugin],
       printConfig: true,
     });
 
     await expect(configDug.load()).rejects.toThrowError(
-      'Environment variable CONFIG_CAT_SDK_KEY is required to be configured.'
+      'Config value: CONFIG_CAT_SDK_KEY is required to be configured before loading this plugin.'
     );
   });
 
