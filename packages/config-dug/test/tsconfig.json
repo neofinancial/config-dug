@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "types": ["vitest/globals"],
+    "noEmit": true,
+    "strictNullChecks": true
+  },
+  "include": ["./**/*", "../vite.config.js"]
+}

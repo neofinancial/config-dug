@@ -15,6 +15,7 @@ const errorMap: ZodErrorMap = (issue, ctx) => {
   if (issue.code === ZodIssueCode.invalid_type && issue.received === 'undefined') {
     return { message: 'This field is required.' };
   }
+
   return { message: ctx.defaultError };
 };
 

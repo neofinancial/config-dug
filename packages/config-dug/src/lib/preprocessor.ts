@@ -9,24 +9,30 @@ const getPreprocessorByZodType = (schema: z.ZodFirstPartySchemaTypes): ((arg: st
   switch (typeName) {
     case TypeName.ZodString:
     case TypeName.ZodEnum:
-    case TypeName.ZodUndefined:
-      return (arg) => arg;
 
-    case TypeName.ZodNumber:
+    case TypeName.ZodUndefined: {
+      return (arg) => arg;
+    }
+
+    case TypeName.ZodNumber: {
       return (arg) => {
         if (typeof arg === 'string' && /^-?\d+(\.\d+)?$/.test(arg)) {
           return Number(arg);
         }
+
         return arg;
       };
+    }
 
-    case TypeName.ZodBigInt:
+    case TypeName.ZodBigInt: {
       return (arg) => {
         if (typeof arg === 'string' && /^-?\d+$/.test(arg)) {
           return BigInt(arg);
         }
+
         return arg;
       };
+    }
 
     // env vars that act as flags might be declared in a number of ways,
     // including simply `SOME_VALUE=` (with no RHS). the latter convention
@@ -46,32 +52,43 @@ const getPreprocessorByZodType = (schema: z.ZodFirstPartySchemaTypes): ((arg: st
     //   their own code according to their needs).
     //
     // for now, this hedge seems to work fine, but it might be worth revisiting.
-    case TypeName.ZodBoolean:
+    case TypeName.ZodBoolean: {
       return (arg) => {
         if (typeof arg === 'string') {
           // eslint-disable-next-line default-case
           switch (arg) {
             case 'true':
             case 'yes':
-            case '1':
+
+            case '1': {
               return true;
+            }
+
             case 'false':
             case 'no':
-            case '0':
+
+            case '0': {
               return false;
+            }
           }
         }
+
         return arg;
       };
+    }
 
     case TypeName.ZodArray:
     case TypeName.ZodObject:
     case TypeName.ZodTuple:
     case TypeName.ZodRecord:
-    case TypeName.ZodIntersection:
+
+    case TypeName.ZodIntersection: {
       return (arg) => {
         // neither `undefined` nor the empty string are valid json.
-        if (!arg) return arg;
+        if (!arg) {
+          return arg;
+        }
+
         // the one circumstance (so far) when i think a preprocessor should be
         // able to throw is if we're coercing to json but it's invalid -- this
         // way the error message will be more informative (rather than just
@@ -80,19 +97,26 @@ const getPreprocessorByZodType = (schema: z.ZodFirstPartySchemaTypes): ((arg: st
         // overengineer things for now.
         return JSON.parse(arg);
       };
+    }
 
-    case TypeName.ZodEffects:
+    case TypeName.ZodEffects: {
       return getPreprocessorByZodType(def.schema);
+    }
 
-    case TypeName.ZodDefault:
+    case TypeName.ZodDefault: {
       // eslint-disable-next-line unicorn/consistent-destructuring -- false positive
       return getPreprocessorByZodType(def.innerType);
+    }
 
     case TypeName.ZodOptional: {
       const { innerType } = def;
       const pp = getPreprocessorByZodType(innerType);
+
       return (arg) => {
-        if (arg === undefined) return arg;
+        if (arg === undefined) {
+          return arg;
+        }
+
         return pp(arg);
       };
     }
@@ -100,51 +124,72 @@ const getPreprocessorByZodType = (schema: z.ZodFirstPartySchemaTypes): ((arg: st
     case TypeName.ZodNullable: {
       const { innerType } = def;
       const pp = getPreprocessorByZodType(innerType);
+
       return (arg) => {
         // coerce undefined to null.
-        if (arg == null) return null;
+        if (arg == null) {
+          return null;
+        }
+
         return pp(arg);
       };
     }
 
-    case TypeName.ZodDate:
+    case TypeName.ZodDate: {
       return (arg) => {
         // calling the 0-arity Date constructor makes a new Date with the
         // current time, which definitely isn't what we want here. but calling
         // the 1-arity Date constructor, even with `undefined`, should result in
         // "invalid date" for values that aren't parseable. we filter out
         // `undefined` anyway, though-- it makes typescript happier.
-        if (arg == null) return arg;
+        if (arg == null) {
+          return arg;
+        }
+
         return new Date(arg);
       };
+    }
 
-    case TypeName.ZodLiteral:
+    case TypeName.ZodLiteral: {
       switch (typeof def.value) {
-        case 'number':
+        case 'number': {
           return getPreprocessorByZodType({
             _def: { typeName: TypeName.ZodNumber },
           } as z.ZodFirstPartySchemaTypes);
-        case 'string':
+        }
+
+        case 'string': {
           return getPreprocessorByZodType({
             _def: { typeName: TypeName.ZodString },
           } as z.ZodFirstPartySchemaTypes);
-        case 'boolean':
+        }
+
+        case 'boolean': {
           return getPreprocessorByZodType({
             _def: { typeName: TypeName.ZodBoolean },
           } as z.ZodFirstPartySchemaTypes);
-        default:
-          return (arg) => arg;
-      }
+        }
 
-    case TypeName.ZodNull:
+        default: {
+          return (arg) => arg;
+        }
+      }
+    }
+
+    case TypeName.ZodNull: {
       return (arg) => {
         // coerce undefined to null
-        if (arg == null) return null;
+        if (arg == null) {
+          return null;
+        }
+
         return arg;
       };
+    }
 
     case TypeName.ZodAny:
-    case TypeName.ZodUnknown:
+
+    case TypeName.ZodUnknown: {
       throw new Error(
         [
           `Zod type not supported: ${typeName}`,
@@ -152,6 +197,13 @@ const getPreprocessorByZodType = (schema: z.ZodFirstPartySchemaTypes): ((arg: st
           '(Environment variables are already constrained to `string | undefined`.)',
         ].join('\n')
       );
+    }
+
+    case TypeName.ZodFunction: {
+      return (arg) => {
+        return arg;
+      };
+    }
 
     case TypeName.ZodFunction:
       return (arg) => {
@@ -165,11 +217,14 @@ const getPreprocessorByZodType = (schema: z.ZodFirstPartySchemaTypes): ((arg: st
     case TypeName.ZodMap:
     case TypeName.ZodSet:
     case TypeName.ZodUnion:
-    case TypeName.ZodNativeEnum:
-      throw new Error(`Zod type not supported: ${typeName}`);
 
-    default:
+    case TypeName.ZodNativeEnum: {
+      throw new Error(`Zod type not supported: ${typeName}`);
+    }
+
+    default: {
       throw new Error(`Unhandled type: ${typeName}`);
+    }
   }
 };
 
