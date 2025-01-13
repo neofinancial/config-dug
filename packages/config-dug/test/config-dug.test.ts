@@ -6,119 +6,169 @@ import { ConfigDug } from '../src/config-dug';
 import { vstub } from './helpers/vstub';
 import { ConfigDugPlugin } from '../src/lib/plugin';
 
-describe('config-dug Plugins', () => {
-  beforeEach(() => {
-    vi.restoreAllMocks();
-  });
+describe('ConfigDug', () => {
+  const testConfigSchema = {
+    testNum: z.number().default(0),
+  };
 
-  it('should initialize all plugins', async () => {
-    const schema = {};
+  describe('getConfig', () => {
+    const configDug = new ConfigDug(testConfigSchema);
 
-    const plugins = Array(5)
-      .fill(0)
-      .map((_) => vstub<ConfigDugPlugin>());
-
-    for (const plugin of plugins) {
-      plugin.load.mockResolvedValue({
-        values: {},
-        valueOrigins: {},
-      });
-      plugin.isInitialized.mockReturnValue(false);
-    }
-
-    const configDug = new ConfigDug(schema, {
-      plugins,
-      printConfig: true,
+    it('should throw an error when attempting to call getConfig without first loading', async () => {
+      await expect(async () => configDug.getConfig()).rejects.toThrowError(
+        'Config values have not been loaded. You must call `load()` first.'
+      );
     });
 
-    await configDug.load();
+    it('should successfully return the config object after explicitly loading', async () => {
+      await configDug.load();
 
-    for (const plugin of plugins) {
-      expect(plugin.initialize).toHaveBeenCalled();
-    }
-  });
+      const fetchedConfig = configDug.getConfig();
 
-  it('should load all plugins', async () => {
-    const schema = {};
-
-    const plugins = Array(5)
-      .fill(0)
-      .map((_) => vstub<ConfigDugPlugin>());
-
-    for (const plugin of plugins) {
-      plugin.load.mockResolvedValue({
-        values: {},
-        valueOrigins: {},
-      });
-      plugin.isInitialized.mockReturnValue(true);
-    }
-
-    const configDug = new ConfigDug(schema, {
-      plugins,
-      printConfig: true,
+      expect(fetchedConfig).toEqual({ testNum: 0 });
     });
-
-    await configDug.load();
-
-    for (const plugin of plugins) {
-      expect(plugin.load).toHaveBeenCalled();
-    }
   });
 
-  it('should coerce the plugin value names correctly', async () => {
-    const schema = {
-      aVariableName: {
-        schema: z.string(),
-        description: 'camelCase',
-      },
-      aVariableName2: {
-        schema: z.string(),
-        description: 'camelCase2',
-      },
-      aVariableName3: {
-        schema: z.string(),
-        description: 'camelCase3',
+  describe('getRedactedConfig', () => {
+    const testRedactedConfigSchema = {
+      testNum: z.number().default(0),
+      superSecretPassword: {
+        schema: z.string().default('password'),
+        sensitive: true,
       },
     };
 
-    const plugins = Array(3)
-      .fill(0)
-      .map((_) => vstub<ConfigDugPlugin>());
+    const configDug = new ConfigDug(testRedactedConfigSchema);
 
-    for (const plugin of plugins) {
-      plugin.isInitialized.mockReturnValue(true);
-    }
-
-    plugins[0].load.mockResolvedValue({
-      values: {
-        aVariableName: 'value1',
-      },
-      valueOrigins: {},
-    });
-    plugins[1].load.mockResolvedValue({
-      values: {
-        a_variable_name2: 'value2',
-      },
-      valueOrigins: {},
-    });
-    plugins[2].load.mockResolvedValue({
-      values: {
-        'a-variable-name3': 'value3',
-      },
-      valueOrigins: {},
+    it('should throw an error when attempting to call getRedactedConfig without first loading', async () => {
+      await expect(async () => configDug.getRedactedConfig()).rejects.toThrowError(
+        'Config values have not been loaded. You must call `load()` first.'
+      );
     });
 
-    const configDug = new ConfigDug(schema, {
-      plugins,
-      printConfig: true,
+    it('should successfully return the config object and redact the sensitive fields after explicitly loading', async () => {
+      await configDug.load();
+
+      const fetchedConfig = configDug.getRedactedConfig();
+
+      expect(fetchedConfig).toEqual({ testNum: 0, superSecretPassword: '[REDACTED]' });
+    });
+  });
+
+  describe('config-dug Plugins', () => {
+    beforeEach(() => {
+      vi.restoreAllMocks();
     });
 
-    await configDug.load();
+    it('should initialize all plugins', async () => {
+      const schema = {};
 
-    const config = configDug.getConfig();
+      const plugins = Array(5)
+        .fill(0)
+        .map((_) => vstub<ConfigDugPlugin>());
 
-    expect(config.aVariableName).toEqual('value1');
-    expect(config.aVariableName2).toEqual('value2');
-    expect(config.aVariableName3).toEqual('value3');
+      for (const plugin of plugins) {
+        plugin.load.mockResolvedValue({
+          values: {},
+          valueOrigins: {},
+        });
+        plugin.isInitialized.mockReturnValue(false);
+      }
+
+      const configDug = new ConfigDug(schema, {
+        plugins,
+        printConfig: true,
+      });
+
+      await configDug.load();
+
+      for (const plugin of plugins) {
+        expect(plugin.initialize).toHaveBeenCalled();
+      }
+    });
+
+    it('should load all plugins', async () => {
+      const schema = {};
+
+      const plugins = Array(5)
+        .fill(0)
+        .map((_) => vstub<ConfigDugPlugin>());
+
+      for (const plugin of plugins) {
+        plugin.load.mockResolvedValue({
+          values: {},
+          valueOrigins: {},
+        });
+        plugin.isInitialized.mockReturnValue(true);
+      }
+
+      const configDug = new ConfigDug(schema, {
+        plugins,
+        printConfig: true,
+      });
+
+      await configDug.load();
+
+      for (const plugin of plugins) {
+        expect(plugin.load).toHaveBeenCalled();
+      }
+    });
+
+    it('should coerce the plugin value names correctly', async () => {
+      const schema = {
+        aVariableName: {
+          schema: z.string(),
+          description: 'camelCase',
+        },
+        aVariableName2: {
+          schema: z.string(),
+          description: 'camelCase2',
+        },
+        aVariableName3: {
+          schema: z.string(),
+          description: 'camelCase3',
+        },
+      };
+
+      const plugins = Array(3)
+        .fill(0)
+        .map((_) => vstub<ConfigDugPlugin>());
+
+      for (const plugin of plugins) {
+        plugin.isInitialized.mockReturnValue(true);
+      }
+
+      plugins[0].load.mockResolvedValue({
+        values: {
+          aVariableName: 'value1',
+        },
+        valueOrigins: {},
+      });
+      plugins[1].load.mockResolvedValue({
+        values: {
+          a_variable_name2: 'value2',
+        },
+        valueOrigins: {},
+      });
+      plugins[2].load.mockResolvedValue({
+        values: {
+          'a-variable-name3': 'value3',
+        },
+        valueOrigins: {},
+      });
+
+      const configDug = new ConfigDug(schema, {
+        plugins,
+        printConfig: true,
+      });
+
+      await configDug.load();
+
+      const config = configDug.getConfig();
+
+      expect(config.aVariableName).toEqual('value1');
+      expect(config.aVariableName2).toEqual('value2');
+      expect(config.aVariableName3).toEqual('value3');
+    });
   });
 });
