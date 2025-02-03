@@ -12,5 +12,6 @@ module.exports = {
     'jest/no-deprecated-functions': 'off',
     'jest/valid-expect': 'off',
     'jest/valid-expect-in-promise': 'off',
+    'import/no-extraneous-dependencies': ['error', { peerDependencies: true }],
   },
 };

@@ -1,10 +1,4 @@
-import {
-  ConfigDugPlugin,
-  ConfigDugOptions,
-  ConfigDugPluginOutput,
-  BaseConfigDugPlugin,
-  ConfigDugPluginOptions,
-} from 'config-dug';
+import { ConfigDugPluginOutput, BaseConfigDugPlugin, ConfigDugPluginOptions } from 'config-dug';
 import {
   SecretsManagerClient,
   GetSecretValueCommand,
@@ -43,13 +37,13 @@ class AWSSecretsManagerPlugin extends BaseConfigDugPlugin<AWSSecretsManagerPlugi
     this.pluginOptions = options;
   }
 
-  public initialize = async (_: ConfigDugOptions): Promise<void> => {
+  public override async initialize(): Promise<void> {
     this.secrets = this.createSecrets();
 
     this.initialized = true;
-  };
+  }
 
-  public load = async (): Promise<ConfigDugPluginOutput> => {
+  public async load(): Promise<ConfigDugPluginOutput> {
     if (!this.initialized) {
       throw new Error('Plugin not initialized');
     }
@@ -100,9 +94,9 @@ class AWSSecretsManagerPlugin extends BaseConfigDugPlugin<AWSSecretsManagerPlugi
       valueOrigins: this.valueOrigins,
       nextReloadIn,
     };
-  };
+  }
 
-  private createSecrets = (): AWSSecretsManagerPluginSecret[] => {
+  private createSecrets(): AWSSecretsManagerPluginSecret[] {
     return this.pluginOptions.secrets.map((secret) => {
       return {
         client: new SecretsManagerClient({
@@ -114,9 +108,9 @@ class AWSSecretsManagerPlugin extends BaseConfigDugPlugin<AWSSecretsManagerPlugi
         config: secret,
       };
     });
-  };
+  }
 
-  private recordValueOrigins = (values: Record<string, unknown>, origin: string) => {
+  private recordValueOrigins(values: Record<string, unknown>, origin: string) {
     for (const key of Object.keys(values)) {
       if (this.valueOrigins[key]) {
         const last = this.valueOrigins[key][this.valueOrigins[key].length - 1];
@@ -128,7 +122,7 @@ class AWSSecretsManagerPlugin extends BaseConfigDugPlugin<AWSSecretsManagerPlugi
         this.valueOrigins[key] = [origin];
       }
     }
-  };
+  }
 
   private getNextReloadInterval(
     secret: AWSSecretsManagerPluginSecret,

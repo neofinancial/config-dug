@@ -238,7 +238,7 @@ class ConfigDug<T extends ConfigDugSchema> extends EventEmitter {
 
     for (const plugin of this.options.plugins) {
       if (!plugin.isInitialized()) {
-        await plugin.initialize(this.options, values);
+        await plugin.initialize(values as any);
       }
 
       const pluginReturnValue: ConfigDugPluginOutput = await plugin.load();

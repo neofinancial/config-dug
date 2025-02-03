@@ -1,9 +1,10 @@
-import { ConfigDugOptions, ConfigDugPlugin, ConfigDugPluginOutput, BaseConfigDugPlugin, z } from 'config-dug';
+import { BaseConfigDugPlugin, ConfigDugPluginOptions, ConfigDugPluginOutput } from 'config-dug';
+import { z } from 'zod';
 
 import createDebug from 'debug';
 import { getClient, IConfigCatClient, IManualPollOptions } from 'configcat-node';
 
-import { DeepReadonlyObject, TypedConfig } from 'config-dug/src/config-dug';
+import { DeepReadonlyObject, TypedConfig } from 'config-dug/config-dug';
 
 export const targetedConfigCatFlagSchema = z
   .function()
@@ -13,7 +14,7 @@ export const targetedConfigCatFlagSchema = z
       email: z.string().optional(),
       country: z.string().optional(),
       custom: z.record(z.string(), z.string() || z.number()).optional(),
-    })
+    }),
   )
   .returns(z.promise(z.union([z.boolean(), z.string(), z.number(), z.null(), z.undefined()])));
 
@@ -44,9 +45,8 @@ enum PollingMode {
   ManualPoll = 2,
 }
 
-export interface ConfigCatPluginOptions {
+export interface ConfigCatPluginOptions extends ConfigDugPluginOptions {
   configCatOptions?: IManualPollOptions;
-  reloadInterval?: string | number;
   sdkKeyName: string;
   sourceKeyStyle?: string;
   targetedFlags?: ConfigCatTargetedFlag[];
@@ -59,28 +59,25 @@ interface ConfigCatTargetedFlag {
 
 const debug = createDebug('config-dug:plugin:config-cat');
 
-class ConfigCatPlugin extends BaseConfigDugPlugin<ConfigCatPluginOptions> implements ConfigDugPlugin {
+class ConfigCatPlugin extends BaseConfigDugPlugin<ConfigCatPluginOptions> {
   private valueOrigins: Record<string, string[]> = {};
-  private client: IConfigCatClient;
+  private client?: IConfigCatClient;
 
-  public override initialize = async (
-    _: ConfigDugOptions,
-    currentConfig: DeepReadonlyObject<TypedConfig<any>>
-  ): Promise<void> => {
+  public override async initialize(currentConfig: DeepReadonlyObject<TypedConfig<any>>): Promise<void> {
     const sdkKey = currentConfig[this.pluginOptions.sdkKeyName] as string | undefined;
 
     if (!sdkKey) {
       throw new Error(
-        `Config value: ${this.pluginOptions.sdkKeyName} is required to be configured before loading this plugin.`
+        `Config value: ${this.pluginOptions.sdkKeyName} is required to be configured before loading this plugin.`,
       );
     }
 
     this.client = getClient(sdkKey, PollingMode.ManualPoll, this.pluginOptions.configCatOptions);
     this.initialized = true;
-  };
+  }
 
-  public load = async (): Promise<ConfigDugPluginOutput> => {
-    if (!this.initialized) {
+  public async load(): Promise<ConfigDugPluginOutput> {
+    if (!this.initialized || !this.client) {
       throw new Error('Plugin not initialized');
     }
 
@@ -110,17 +107,21 @@ class ConfigCatPlugin extends BaseConfigDugPlugin<ConfigCatPluginOptions> implem
       valueOrigins: this.valueOrigins,
       nextReloadIn: nextReloadIn,
     };
-  };
+  }
 
-  private getTargetedFlagCallback = (key: string, defaultValue: ConfigCatValueType) => {
+  private getTargetedFlagCallback(key: string, defaultValue: ConfigCatValueType) {
     return async (user: ConfigCatTargetUser): Promise<ConfigCatValueType> => {
+      if (!this.client) {
+        throw new Error('Plugin not initialized');
+      }
+
       const value = await this.client.getValueAsync<ConfigCatValueType>(key, defaultValue, user);
 
       return value;
     };
-  };
+  }
 
-  private recordValueOrigins = (values: Record<string, unknown>, origin: string): void => {
+  private recordValueOrigins(values: Record<string, unknown>, origin: string): void {
     for (const key of Object.keys(values)) {
       if (this.valueOrigins[key]) {
         const last = this.valueOrigins[key].at(-1);
@@ -132,7 +133,7 @@ class ConfigCatPlugin extends BaseConfigDugPlugin<ConfigCatPluginOptions> implem
         this.valueOrigins[key] = [origin];
       }
     }
-  };
+  }
 }
 
 export { ConfigCatPlugin };
