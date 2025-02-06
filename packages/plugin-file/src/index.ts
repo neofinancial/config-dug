@@ -1,11 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import {
-  ConfigDugPlugin,
-  ConfigDugOptions,
-  ConfigDugPluginOutput,
-  BaseConfigDugPlugin,
-} from '../../config-dug/src/index';
+import { ConfigDugOptions, ConfigDugPluginOutput, BaseConfigDugPlugin } from '../../config-dug/src/index';
 import createDebug from 'debug';
 import globby from 'globby';
 import ms from 'ms';
@@ -17,7 +12,7 @@ export interface FilePluginOptions {
 
 const debug = createDebug('config-dug:plugin:file');
 
-class FilePlugin extends BaseConfigDugPlugin<FilePluginOptions> implements ConfigDugPlugin {
+class FilePlugin extends BaseConfigDugPlugin<FilePluginOptions> {
   private configDugOptions: ConfigDugOptions | undefined;
   private valueOrigins: Record<string, string[]> = {};
 
