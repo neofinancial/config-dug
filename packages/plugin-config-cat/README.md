@@ -8,7 +8,7 @@ This plugin is used to support loading configuration values via the ConfigCat AP
 ## The ConfigCat SDK key
 
 > [!IMPORTANT]
-> The ConfigCat SDK key name will be specified within the plugin parameters. This sdk key value will need to be loadedfrom the environment variables in order to be used in this plugin.
+> The ConfigCat SDK key name will be specified within the plugin parameters. This sdk key value will need to be loaded from the environment variables in order to be used in this plugin.
 
 ## Defining the ConfigCat plugin
 
@@ -55,7 +55,7 @@ const schema = {
 
 ## Adding the plugin to Config Dug
 
-The ConfigCat flugin can be added to the plugins array in config dug constructor. Keep in mind the plugin load order dictates which values will be used.
+The ConfigCat plugin can be added to the plugins array in config dug constructor. Keep in mind the plugin load order dictates which values will be used.
 
 ```ts
 const configDug = new ConfigDug(schema, {
