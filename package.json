@@ -35,11 +35,11 @@
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
-    "@vitest/coverage-v8": "^2.1.8",
+    "@vitest/coverage-v8": "^2.1.9",
     "husky": "^7.0.2",
     "lint-staged": "^11.2.3",
     "prettier": "^2.4.1",
     "rimraf": "^3.0.2",
-    "vitest": "^2.1.8"
+    "vitest": "^2.1.9"
   }
 }
