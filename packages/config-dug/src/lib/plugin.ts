@@ -1,8 +1,7 @@
 import ms from 'ms';
+import { z } from 'zod';
 
 import { ConfigDugSchema, DeepReadonlyObject, TypedConfig, UntypedConfig, ValueOrigins } from '../config-dug.js';
-import { ConfigDugOptions } from './options.js';
-import { z } from 'zod';
 
 export type ConfigDugPluginOutput = {
   nextReloadIn?: number;
@@ -11,37 +10,13 @@ export type ConfigDugPluginOutput = {
   valueOrigins: ValueOrigins;
 };
 
-const ConfigDugPluginOutputSchema = z.object({
-  nextReloadIn: z.number().optional(),
-  schema: z.record(z.ZodType.prototype).optional(),
-  values: z.record(z.unknown()),
-  valueOrigins: z.record(z.array(z.string())),
-});
-
-export interface ConfigDugPlugin {
-  isInitialized: () => boolean;
-  initialize: (
-    configDugOptions: ConfigDugOptions,
-    currentConfig: DeepReadonlyObject<TypedConfig<any>>
-  ) => Promise<void>;
-  load: () => Promise<ConfigDugPluginOutput>;
-  reload: () => Promise<ConfigDugPluginOutput | undefined>;
-  getNextReloadIn(): number | undefined;
-}
-
-export const pluginSchema = z.object({
-  isInitialized: z.function().returns(z.boolean()),
-  initialize: z.function().returns(z.promise(z.void())),
-  load: z.function().returns(z.promise(ConfigDugPluginOutputSchema)),
-  reload: z.function().returns(z.promise(ConfigDugPluginOutputSchema)),
-  getNextReloadIn: z.function().returns(z.number().optional()),
-});
+export const pluginSchema = z.custom<BaseConfigDugPlugin<ConfigDugPluginOptions>>();
 
 export interface ConfigDugPluginOptions {
   reloadInterval?: string | number;
 }
 
-export abstract class BaseConfigDugPlugin<T extends ConfigDugPluginOptions> implements ConfigDugPlugin {
+export abstract class BaseConfigDugPlugin<T extends ConfigDugPluginOptions> {
   protected nextReloadAt: number | undefined;
   public initialized: boolean = false;
   protected pluginOptions: T;
@@ -61,12 +36,7 @@ export abstract class BaseConfigDugPlugin<T extends ConfigDugPluginOptions> impl
    * @param currentConfig - The current configuration object, which is read-only.
    * @returns A promise that resolves when the initialization is complete, or void if the initialization is synchronous.
    */
-  public async initialize(
-    configDugOptions: ConfigDugOptions,
-    currentConfig: DeepReadonlyObject<TypedConfig<any>>
-  ): Promise<void> {
-    this.initialized = true;
-  }
+  public abstract initialize(currentConfig: DeepReadonlyObject<TypedConfig<any>>): Promise<void>;
 
   /**
    * Checks if the plugin has been initialized.

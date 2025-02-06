@@ -1,0 +1,9 @@
+{
+  "extends": "../tsconfig.esm.json",
+  "compilerOptions": {
+    "types": ["vitest/globals"],
+    "moduleResolution": "bundler",
+    "module": "ESNext"
+  },
+  "include": ["./**/*", "../vite.config.js"]
+}
