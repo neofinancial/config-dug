@@ -1,12 +1,12 @@
 {
   "extends": "@tsconfig/node18",
   "compilerOptions": {
-    "module": "ES2020",
+    "module": "CommonJS",
     "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "declaration": true,
-    "declarationMap": true,
-    "outDir": "build/esm"
+    "declarationMap": false,
+    "outDir": "build/cjs"
   },
   "include": ["src/**/*"]
 }

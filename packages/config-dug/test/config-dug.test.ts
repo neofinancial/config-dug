@@ -4,7 +4,6 @@ import { z } from 'zod';
 
 import { ConfigDug } from '../src/config-dug';
 import { vstub } from './helpers/vstub';
-import { ConfigDugPlugin } from '../src/lib/plugin';
 
 describe('ConfigDug', () => {
   const testConfigSchema = {

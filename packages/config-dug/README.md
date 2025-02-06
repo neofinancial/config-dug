@@ -98,10 +98,15 @@ export { getConfig };
 
 ### Plugin Interface
 
+Create a plugin by extending the `BaseConfigDugPlugin` class. The type argument specifies the particular options your plugin accepts, which itself must extend `ConfigDugPluginOptions`.
+
 ```ts
-interface ConfigDugPlugin {
-  public load(): Promise<UntypedConfig>;
-  public reload(): Promise<UntypedConfig>;
+interface MyPluginOptions extends ConfigDugPluginOptions {
+  // ...
+}
+
+class MyPlugin extends BaseConfigDugPlugin<MyPluginOptions> {
+  // ...
 }
 ```
 

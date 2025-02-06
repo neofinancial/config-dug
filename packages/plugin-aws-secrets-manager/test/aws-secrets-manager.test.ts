@@ -32,14 +32,14 @@ beforeEach(() => {
 describe('AWSSecretsManagerPlugin', () => {
   describe('initialize', () => {
     it('should initialize the plugin', async () => {
-      await plugin.initialize({});
+      await plugin.initialize();
       expect(plugin['initialized']).toBe(true);
     });
   });
 
   describe('load', () => {
     it('should load secrets and return values', async () => {
-      await plugin.initialize({});
+      await plugin.initialize();
       const output = await plugin.load();
       expect(output.values).toEqual({ testKey: 'testValue' });
     });
@@ -50,7 +50,7 @@ describe('AWSSecretsManagerPlugin', () => {
 
     it('should handle secrets with invalid JSON', async () => {
       mockSecretsManagerClient.send.mockResolvedValueOnce({ SecretString: 'invalid-json' });
-      await plugin.initialize({});
+      await plugin.initialize();
       await expect(plugin.load()).resolves.toEqual({
         values: {},
         valueOrigins: {},
@@ -60,7 +60,7 @@ describe('AWSSecretsManagerPlugin', () => {
 
     it('should handle empty secrets', async () => {
       mockSecretsManagerClient.send.mockResolvedValueOnce({});
-      await plugin.initialize({});
+      await plugin.initialize();
       await expect(plugin.load()).resolves.toEqual({
         values: {},
         valueOrigins: {},
@@ -81,7 +81,7 @@ describe('AWSSecretsManagerPlugin', () => {
       };
 
       plugin = new AWSSecretsManagerPlugin(testPluginOptionsWithReload);
-      await plugin.initialize({});
+      await plugin.initialize();
       const output = await plugin.load();
       expect(output.nextReloadIn).toBe(ms(reloadInterval));
     });
