@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { ConfigDugOptions, ConfigDugPluginOutput, BaseConfigDugPlugin } from '../../config-dug/src/index';
+import { ConfigDugOptions, ConfigDugPluginOutput, BaseConfigDugPlugin } from 'config-dug';
 import createDebug from 'debug';
 import globby from 'globby';
 import ms from 'ms';
@@ -53,17 +53,21 @@ class FilePlugin extends BaseConfigDugPlugin<FilePluginOptions> {
         const module = await import(path.join(basePath, file));
 
         if (typeof module === 'object') {
-          values = { ...values, ...module };
+          Object.assign(values, module);
           this.recordValueOrigins(module, file);
         }
-      } else if (path.extname(file) === '.json') {
+
+        continue;
+      }
+
+      if (path.extname(file) === '.json') {
         const contents = await fs.readFile(file, 'utf8');
 
         try {
           const module = JSON.parse(contents);
 
           if (typeof module === 'object') {
-            values = { ...values, ...module };
+            Object.assign(values, module);
             this.recordValueOrigins(module, file);
           }
         } catch (error) {
@@ -101,7 +105,9 @@ class FilePlugin extends BaseConfigDugPlugin<FilePluginOptions> {
       const reloadIn = ms(reloadInterval);
 
       return reloadIn + Date.now();
-    } else if (typeof reloadInterval === 'number') {
+    }
+
+    if (typeof reloadInterval === 'number') {
       return reloadInterval + Date.now();
     }
   }

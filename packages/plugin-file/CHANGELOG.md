@@ -1,4 +1,4 @@
-# Plugin AWS Secrets Manager Changelog
+# Plugin File Changelog
 
 ## 1.0.0 (TBD)
 

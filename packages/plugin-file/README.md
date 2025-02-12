@@ -38,13 +38,23 @@ const schema = {
 
 ## Adding the plugin to Config Dug
 
-The File flugin can be added to the plugins array in config dug constructor. Keep in mind the plugin load order dictates which values will be used.
+The File plugin can be added to the plugins array in config dug constructor. Keep in mind the plugin load order dictates which values will be used.
 
 ```ts
 const configDug = new ConfigDug(schema, {
   plugins: [filePlugin],
   printConfig: true,
 });
+```
+
+## Export your configuration
+
+The file plugin will read from your configuration files. Currently supported formats include .js and .json.
+
+```js
+module.exports = {
+  logLevel: 'debug',
+};
 ```
 
 ## Complete example
