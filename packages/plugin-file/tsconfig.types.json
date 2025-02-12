@@ -1,0 +1,10 @@
+{
+  "extends": "@tsconfig/node18",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "outDir": "build/types"
+  },
+  "include": ["src/**/*"]
+}
