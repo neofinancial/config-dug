@@ -11,15 +11,16 @@ This plugin is used to support loading configuration values via the File API: ht
 ```ts
 const filePlugin = new FilePlugin({
   files: ['config.json'],
+  reloadInterval: '1m',
 });
 ```
 
 ### Parameter Reference
 
-| Parameter        | Type     | Description                                                               |
-| :--------------- | :------- | :------------------------------------------------------------------------ |
-| `sourceKeyStyle` | `number` | The naming convention used by the plugin source. ex. SCREAMING_SNAKE_CASE |
-| `targetedFlags`  | `array`  | The definition of all targeted flags to be loaded by the plugin.          |
+| Parameter        | Type     | Description                                                                       |
+| :--------------- | :------- | :-------------------------------------------------------------------------------- |
+| `files`          | `string` | The file extensions used for configuration values                                 |
+| `reloadInterval` | `array`  | Specifies the interval at which the plugin should reload the configuration files. |
 
 ## Adding targeted flags to the Config Dug schema
 
@@ -74,17 +75,8 @@ const schema = {
 };
 
 const filePlugin = new FilePlugin({
-  sourceKeyStyle: 'SCREAMING_SNAKE_CASE',
-  targetedFlags: [
-    {
-      key: 'value1',
-      defaultValue: false,
-    },
-    {
-      key: 'value2',
-      defaultValue: 'test default',
-    },
-  ],
+  files: ['config.json'],
+  reloadInterval: '1m',
 });
 
 const configDug = new ConfigDug(schema, {
