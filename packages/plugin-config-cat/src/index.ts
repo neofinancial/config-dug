@@ -14,7 +14,7 @@ export const targetedConfigCatFlagSchema = z
       email: z.string().optional(),
       country: z.string().optional(),
       custom: z.record(z.string(), z.string() || z.number()).optional(),
-    }),
+    })
   )
   .returns(z.promise(z.union([z.boolean(), z.string(), z.number(), z.null(), z.undefined()])));
 
@@ -68,7 +68,7 @@ class ConfigCatPlugin extends BaseConfigDugPlugin<ConfigCatPluginOptions> {
 
     if (!sdkKey) {
       throw new Error(
-        `Config value: ${this.pluginOptions.sdkKeyName} is required to be configured before loading this plugin.`,
+        `Config value: ${this.pluginOptions.sdkKeyName} is required to be configured before loading this plugin.`
       );
     }
 
