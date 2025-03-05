@@ -3,6 +3,7 @@ import { FilePlugin } from '../src/index';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import globby from 'globby';
+import { ConfigDug } from 'config-dug';
 vi.mock('node:fs/promises');
 vi.mock('globby');
 

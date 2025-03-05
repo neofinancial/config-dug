@@ -21,23 +21,23 @@ class FilePlugin extends BaseConfigDugPlugin<FilePluginOptions> {
     this.pluginOptions = options;
   }
 
-  public override initialize = async (configDugOptions: ConfigDugOptions): Promise<void> => {
+  public override async initialize(configDugOptions: ConfigDugOptions): Promise<void> {
     this.configDugOptions = configDugOptions;
     this.initialized = true;
-  };
+  }
 
-  public load = async (): Promise<ConfigDugPluginOutput> => {
+  public async load(): Promise<ConfigDugPluginOutput> {
     if (!this.initialized) {
       throw new Error('Plugin not initialized');
     }
 
-    if (this.configDugOptions === undefined) {
+    if (!this.configDugOptions) {
       throw new Error('ConfigDugOptions not set');
     }
 
     this.valueOrigins = {};
-    let values: Record<string, unknown> = {};
-    let nextReloadIn: number | undefined;
+    const values: Record<string, unknown> = {};
+    const nextReloadIn = this.getNextReloadInterval(this.pluginOptions.reloadInterval);
 
     const paths = await globby(this.pluginOptions.files);
 
@@ -69,14 +69,14 @@ class FilePlugin extends BaseConfigDugPlugin<FilePluginOptions> {
           if (typeof module === 'object') {
             Object.assign(values, module);
             this.recordValueOrigins(module, file);
+          } else {
+            console.warn(`Config file ${file} does not contain a valid JSON object`);
           }
         } catch (error) {
           console.error('Error parsing JSON file', file, error);
         }
       }
     }
-
-    nextReloadIn = this.getNextReloadInterval(this.pluginOptions.reloadInterval);
 
     debug('plugin values', values);
     debug('plugin value origins', this.valueOrigins);
@@ -87,18 +87,17 @@ class FilePlugin extends BaseConfigDugPlugin<FilePluginOptions> {
       valueOrigins: this.valueOrigins,
       nextReloadIn,
     };
-  };
+  }
 
-  private recordValueOrigins = (values: Record<string, unknown>, origin: string) => {
+  private recordValueOrigins(values: Record<string, unknown>, origin: string) {
     for (const key of Object.keys(values)) {
       if (!this.valueOrigins[key]) {
-        this.valueOrigins[key] = [];
-      }
-      if (!this.valueOrigins[key].includes(origin)) {
+        this.valueOrigins[key] = [origin];
+      } else if (!this.valueOrigins[key].includes(origin)) {
         this.valueOrigins[key].push(origin);
       }
     }
-  };
+  }
 
   private getNextReloadInterval(reloadInterval: string | number | undefined): number | undefined {
     if (typeof reloadInterval === 'string') {
