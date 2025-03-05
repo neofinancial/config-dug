@@ -2,7 +2,7 @@
 
 A file plugin for Config Dug
 
-This plugin is used to support loading configuration values via the File API: https://api.configcat.com/docs/
+This plugin allows you to load configuration values from JSON and JavaScript files. It supports automatic reloading of configuration files at specified intervals, ensuring that your application always has the most up-to-date configuration values.
 
 # Usage
 
@@ -25,7 +25,7 @@ const filePlugin = new FilePlugin({
 ## Adding targeted flags to the Config Dug schema
 
 > [!IMPORTANT]
-> The File plugin exports a custom type `targetedFileFlagSchema` That can be used to define targeted flags within the schema. This is a custom zod definition that matches function definition returned by this plugin and should be used for all targeted flags.
+> The File plugin exports a custom type `targetedFileFlagSchema` that can be used to define targeted flags within the schema. This is a custom zod definition that matches the function definition returned by this plugin and should be used for all targeted flags.
 
 ```ts
 const schema = {
@@ -39,7 +39,7 @@ const schema = {
 
 ## Adding the plugin to Config Dug
 
-The File plugin can be added to the plugins array in config dug constructor. Keep in mind the plugin load order dictates which values will be used.
+The File plugin can be added to the plugins array in the Config Dug constructor. Keep in mind the plugin load order dictates which values will be used.
 
 ```ts
 const configDug = new ConfigDug(schema, {
