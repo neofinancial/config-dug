@@ -1,5 +1,5 @@
 # Plugin File Changelog
 
-## 1.0.0 (TBD)
+## 0.0.0-alpha.0 (TBD)
 
-- Initial release
+- Alpha testing

@@ -1,6 +1,6 @@
 {
   "name": "@config-dug/plugin-config-cat",
-  "version": "1.0.0-alpha.1",
+  "version": "0.0.0-alpha.0",
   "author": "Neo Financial Engineering <engineering@neofinancial.com>",
   "description": "A ConfigCat plugin for Config Dug",
   "license": "MIT",
