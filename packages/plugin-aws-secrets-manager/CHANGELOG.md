@@ -1,5 +1,5 @@
 # Plugin AWS Secrets Manager Changelog
 
-## 1.0.0 (TBD)
+## 0.0.1-alpha.0 (TBD)
 
-- Initial release
+- Alpha testing
