@@ -47,7 +47,7 @@ describe('configCatPlugin', () => {
     });
 
     await expect(configDug.load()).rejects.toThrowError(
-      'Config value: CONFIG_CAT_SDK_KEY is required to be configured before loading this plugin.',
+      'Config value: CONFIG_CAT_SDK_KEY is required to be configured before loading this plugin.'
     );
   });
 
