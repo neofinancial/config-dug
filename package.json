@@ -19,7 +19,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build --workspace=config-dug --workspace=@config-dug/plugin-aws-secrets-manager --workspace=@config-dug/plugin-file",
+    "build": "npm run build --workspace=config-dug --workspace=@config-dug/plugin-aws-secrets-manager --workspace=@config-dug/plugin-config-cat --workspace=@config-dug/plugin-file",
     "clean": "rimraf packages/*/build",
     "clean:modules": "rimraf node_modules examples/*/node_modules packages/*/node_modules",
     "format": "prettier --write \"**/*.{ts,js,cjs,mjs,json,md}\"",

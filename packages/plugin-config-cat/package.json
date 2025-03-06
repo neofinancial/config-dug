@@ -50,7 +50,7 @@
     "zod": "^3.24.1"
   },
   "peerDependencies": {
-    "config-dug": "^2.0.0-alpha.1"
+    "config-dug": "^2.0.0-alpha.2"
   },
   "devDependencies": {
     "@tsconfig/node18": "^1.0.3",

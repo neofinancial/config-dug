@@ -1,10 +1,14 @@
-import { BaseConfigDugPlugin, ConfigDugPluginOptions, ConfigDugPluginOutput } from 'config-dug';
+import {
+  BaseConfigDugPlugin,
+  ConfigDugPluginOptions,
+  ConfigDugPluginOutput,
+  DeepReadonlyObject,
+  TypedConfig,
+} from 'config-dug';
 import { z } from 'zod';
 
 import createDebug from 'debug';
 import { getClient, IConfigCatClient, IManualPollOptions } from 'configcat-node';
-
-import { DeepReadonlyObject, TypedConfig } from 'config-dug/config-dug';
 
 export const targetedConfigCatFlagSchema = z
   .function()
