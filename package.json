@@ -1,6 +1,6 @@
 {
   "name": "config-dug",
-  "version": "1.9.0",
+  "version": "1.9.1-RC.1",
   "description": "Config loader with support for AWS Secrets Manager",
   "author": "Neo Financial Engineering <engineering@neofinancial.com>",
   "main": "build/index.js",
@@ -12,7 +12,7 @@
     "url": "https://github.com/neofinancial/config-dug.git"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",

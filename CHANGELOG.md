@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.9.1 (September 8, 2025)
+
+- Update dependencies
+- Set minimum Node version to 20 (current LTS version)
+
 ## 1.9.0 (September 13, 2024)
 
 - Enabled support for nested objects and arrays loaded from AWS Secrets
