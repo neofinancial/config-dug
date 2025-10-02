@@ -1,6 +1,6 @@
 {
   "name": "config-dug",
-  "version": "1.9.1-RC.1",
+  "version": "1.9.1",
   "description": "Config loader with support for AWS Secrets Manager",
   "author": "Neo Financial Engineering <engineering@neofinancial.com>",
   "main": "build/index.js",
