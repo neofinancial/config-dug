@@ -37,7 +37,7 @@ In such cases, publishing an alpha version for use in other environments can be 
 
 ### Beta versions (Release candidate)
 
-In some rare situations we need to test Library changes versions on a few services in Production, before rolling out this change to all services that uses the library. How it works:
+In some rare situations, we need to test library change versions on a few services in production before rolling out the change to all services that use the library. How it works:
 
 1. Make sure the version in `package.json` is following this format: `<<major>>.<<minor>>.<<patch>>-beta.<<beta version>>` (e.g. `1.2.5-beta.0`, `1.2.5-beta.1`, etc.).
 1. Make sure all changes including the version bump, lock file and your library changes are committed and pushed to your feature branch.
