@@ -1,6 +1,6 @@
 {
   "name": "config-dug",
-  "version": "1.10.0",
+  "version": "1.10.1-alpha.0",
   "description": "Config loader with support for AWS Secrets Manager",
   "author": "Neo Financial Engineering <engineering@neofinancial.com>",
   "main": "build/index.js",
@@ -46,13 +46,13 @@
     ]
   },
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.635.0",
+    "@aws-sdk/client-secrets-manager": "^3.1086.0",
     "@aws-sdk/node-http-handler": "^3.374.0",
     "debug": "^4.3.6"
   },
   "devDependencies": {
-    "@tsconfig/node18": "^18.2.4",
-    "@types/debug": "^4.1.12",
+    "@tsconfig/node20": "^20.1.9",
+    "@types/debug": "^4.1.13",
     "@types/jest": "^29.5.12",
     "@types/node": "^22.5.0",
     "eslint": "^8.34.0",

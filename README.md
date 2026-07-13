@@ -119,7 +119,7 @@ Config Dug will warn if it detects invalid config values. Invalid values include
 - the string 'undefined'
 - an empty string
 
-This package uses the [aws-sdk](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/) internally. Refer to their documentation for information about [authentication](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-credentials-node.html), configuring a default [region](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/setting-region.html) and configuring [access control for AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access.html).
+This package uses the [aws-sdk](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/) internally. Refer to their documentation for information about [authentication](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/setting-credentials-node.html), configuring a default [region](https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/setting-region.html) and configuring [access control for AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/auth-and-access.html).
 
 ## Advanced
 
