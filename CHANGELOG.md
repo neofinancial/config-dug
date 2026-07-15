@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.10.1 (July 13, 2026)
+
+- Update dependencies
+- Updated development configs to us ts node20
+- Updated README.md to point to accurate documentation
+
 ## 1.10.0 (October 2, 2025)
 
 - Update dependencies
