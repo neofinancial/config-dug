@@ -10,6 +10,7 @@ Config management library for Node.js with support for multiple environments, co
 ## Packages
 
 - [config-dug](./packages/config-dug): Config Dug core library
+- [@config-dug/aws-appconfig](./packages/aws-appconfig): Standalone [AWS AppConfig Agent](https://docs.aws.amazon.com/appconfig/latest/userguide/appconfig-agent.html) client
 
 ### Plugins
 

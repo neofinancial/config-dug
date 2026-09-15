@@ -1,0 +1,13 @@
+{
+  "extends": "@tsconfig/node18",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "lib": ["ES2022", "DOM"],
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": false,
+    "declaration": true,
+    "declarationMap": false,
+    "outDir": "build/cjs"
+  },
+  "include": ["src/**/*"]
+}

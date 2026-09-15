@@ -1,0 +1,13 @@
+{
+  "extends": "@tsconfig/node18",
+  "compilerOptions": {
+    "module": "ES2020",
+    "lib": ["ES2022", "DOM"],
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "build/esm"
+  },
+  "include": ["src/**/*"]
+}

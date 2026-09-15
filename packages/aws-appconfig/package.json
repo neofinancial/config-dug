@@ -1,0 +1,62 @@
+{
+  "name": "@config-dug/aws-appconfig",
+  "version": "0.0.0-alpha.0",
+  "author": "Neo Financial Engineering <engineering@neofinancial.com>",
+  "description": "A standalone AWS AppConfig Agent client",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "sideEffects": false,
+  "main": "./build/cjs/index.js",
+  "module": "./build/esm/index.js",
+  "types": "./build/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./build/types/index.d.ts",
+      "require": "./build/cjs/index.js",
+      "import": "./build/esm/index.js",
+      "default": "./build/cjs/index.js"
+    },
+    "./app-config": {
+      "types": "./build/types/app-config.d.ts",
+      "require": "./build/cjs/app-config.js",
+      "import": "./build/esm/app-config.js",
+      "default": "./build/cjs/app-config.js"
+    },
+    "./feature-flags": {
+      "types": "./build/types/feature-flags.d.ts",
+      "require": "./build/cjs/feature-flags.js",
+      "import": "./build/esm/feature-flags.js",
+      "default": "./build/cjs/feature-flags.js"
+    },
+    "./*": {
+      "types": "./build/types/*.d.ts",
+      "require": "./build/cjs/*.js",
+      "import": "./build/esm/*.js",
+      "default": "./build/cjs/*.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "build",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json",
+    "watch": "tsc -b tsconfig.cjs.json tsconfig.esm.json tsconfig.types.json --watch",
+    "clean": "rimraf build",
+    "playground": "tsx playground/playground.ts",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "devDependencies": {
+    "@tsconfig/node18": "^1.0.3",
+    "@types/node": "^18.11.18",
+    "tsx": "^4.19.2",
+    "typescript": "^5.0.4",
+    "vitest": "^2.1.8"
+  }
+}

@@ -93,6 +93,10 @@ export { getConfig };
 
 ## Plugins
 
+Included plugins:
+
+- [`@config-dug/plugin-aws-secrets-manager`](../plugin-aws-secrets-manager) — merges secret JSON into the main config body
+
 - TODO: Add instructions on using plugins
 - TODO: Add a guide on writing plugins
 
