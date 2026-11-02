@@ -22,7 +22,7 @@ jobs:
           cache: 'npm'
       - name: Install
         run: |
-          npm i -g npm
+          npm i -g npm@10.9.4
           npm ci --prefer-offline
       - name: Format Check
         run: npm run format:check
